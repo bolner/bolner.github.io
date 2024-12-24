@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html>
+    <!--
+        Copyright 2024 Tamas Bolner
+
+        Licensed under the Apache License, Version 2.0 (the "License");
+        you may not use this file except in compliance with the License.
+        You may obtain a copy of the License at
+
+            http://www.apache.org/licenses/LICENSE-2.0
+
+        Unless required by applicable law or agreed to in writing, software
+        distributed under the License is distributed on an "AS IS" BASIS,
+        WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        See the License for the specific language governing permissions and
+        limitations under the License.
+    -->
+    <head>
+        <meta charset="UTF-8">
+        <title>Against Quintus Caecilius (M. Tullius Cicero)</title>
+
+        <style>
+            :root {
+			  --link-color: rgb(127, 161, 171);
+			}
+
+            html {
+                scroll-padding-top: 3em;
+            }
+
+            body {
+                margin: 0;
+                margin-top: 2.5em;
+                margin-bottom: 2em;
+                padding: 0;
+                padding-right: 0.7em;
+                font-size: calc(1vw + 0.3em);
+                color: rgb(209, 209, 209);
+                background-color: rgb(10, 17, 27);
+            }
+
+            table.section {
+                border-collapse: collapse;
+                border: 0;
+                padding: 0;
+                margin: 0;
+            }
+
+            table.section tr {
+                border: 0;
+                padding: 0;
+                margin: 0;
+            }
+
+            table.section td.margin {
+                width: 3.5em;
+                border: 0;
+                padding: 0.5em;
+                padding-top: 0.7em;
+                vertical-align: top;
+                text-align: right;
+            }
+
+            table.section td.latin {
+                width: 50em;
+                background-color: rgb(0, 0, 0);
+                border: 0;
+                padding: 0.5em;
+                vertical-align: top;
+            }
+
+            table.section td.english {
+                width: 50em;
+                background-color: rgb(13, 34, 53);
+                border: 0;
+                padding: 0.5em;
+                vertical-align: top;
+            }
+
+            table.section td.title {
+                background-color: black;
+                border: 0;
+                padding: 0.5em;
+                padding-top: 0em;
+            }
+
+            table.section td.margin a {
+                color: var(--link-color);
+                text-decoration: underline;
+            }
+
+            table.section td.margin a:hover {
+                color: white;
+            }
+
+            table.section td.title div.author {
+                float: right;
+            }
+
+            table.section td.english div.translator {
+                float: right;
+                margin-top: 2.5em;
+            }
+
+            h1, h2 {
+                background-color: transparent;
+            }
+
+            td.title h2 {
+                margin-bottom: 0;
+            }
+
+            div.word {
+                display: inline;
+                background-color: transparent;
+                line-height: 1.5em;
+                padding: 0.1em;
+                margin-left: -0.2em;
+            }
+
+            /*
+				Naviagation
+			*/
+			div.navigation {
+				padding: 0.6em;
+				text-align: center
+			}
+			
+			div.navigation a {
+				color: var(--link-color);
+                text-decoration: underline;
+				padding-left: 0.3em;
+				padding-right: 0.3em;
+			}
+			
+			div.navigation a:hover {
+				color: white;
+                text-decoration: underline;
+			}
+
+            div.navigation div.current-page {
+                display: inline;
+                background-color: #134061;
+                padding-right: 0.4em;
+                padding-left: 0.4em;
+            }
+
+            /*
+                Top bar
+            */
+            .topbar {
+                white-space: nowrap;
+				overflow: hidden;
+                background-color: rgb(13, 24, 40);
+                position: fixed;
+                top: 0;
+                width: 100%;
+                padding: 0.4em;
+                padding-top: 0.1em;
+
+                border-bottom: 0.1em;
+                border-bottom-color: rgb(60, 87, 126);
+                border-bottom-style: solid;
+            }
+
+            .topbar div.rainbow {
+                background: linear-gradient(in hsl longer hue 45deg, red 0 0);
+                text-shadow: 0.15em 0.15em 0.2em #000, -0.15em -0.15em 0.2em #000, 0.15em -0.15em 0.2em #000, -0.15em 0.15em 0.2em #000;
+                position: absolute;
+				right: 0;
+                margin-right: 1em;
+                padding-left: 1em;
+                padding-right: 1em;
+            }
+
+            .topbar div.rainbow:hover {
+                cursor: pointer;
+                background: linear-gradient(in hsl longer hue 125deg, red 0 0);
+            }
+
+            .topbar div.word.sample {
+                font-size: 0.9em;
+                padding-left: 0.2em;
+                padding-right: 0.2em;
+                cursor: pointer;
+            }
+
+            .topbar div.word.title {
+                margin-left: 0.5em;
+            }
+
+            /*
+                Cases
+            */
+            .colored div.nom { /* Nominative */
+                background-color: rgb(4 57 4);
+            }
+
+            .colored div.acc { /* Accusative */
+                background-color: rgb(255, 155, 0);
+                color: black;
+            }
+
+            .colored div.gen { /* Genitive */
+                background-color: rgb(112 0 0);
+            }
+
+            .colored div.dat { /* Dative */
+                background-color: rgb(26 41 141);
+            }
+
+            .colored div.abl { /* Ablative */
+                background-color: rgb(85, 0, 116);
+                color: white;
+            }
+
+            .colored div.voc { /* Vocative */
+                background-color: rgb(237, 237, 145);
+                color: black;
+            }
+
+            .colored div.loc { /* Locative */
+                background-color: rgb(144, 220, 219);
+                color: black;
+            }
+
+            .colored div.pas { /* Voice = Passive */
+                text-decoration: underline;
+                text-underline-offset: 0.2em;
+            }
+
+            .colored div.dep { /* Voice = Deponent */
+                text-decoration: underline;
+                text-decoration-style: dashed;
+                text-underline-offset: 0.2em;
+            }
+
+            div.grey {
+                background-color: rgb(83 83 83);
+            }
+
+            div.ck:hover {
+                cursor: pointer;
+                background-color: #00776b;
+                color: white;
+            }
+
+            /*
+				Footer
+			*/
+			div.footer {
+				text-align: center;
+				font-size: 0.86em;
+				padding-top: 0.4em;
+			}
+			
+			div.footer a, div.footer a:visited {
+				color: var(--link-color);
+			}
+			
+			div.footer a:hover {
+				color: white;
+			}
+
+            /*
+                Dictionary
+            */
+            div#dictwindow {
+                display: none;
+            }
+
+            div.dictionary {
+                background-color: #19424b;
+                position: fixed;
+                left: 53vw;
+                width: 45vw;
+                top: 15%;
+                height: 70%;
+                overflow-y: scroll;
+                
+                padding: 0px;
+                box-shadow: 0.1em 0.1em 0.8em 0.8em black;
+
+                border:1px solid white;
+            }
+
+            div.dictionary div.content {
+                padding: 1em;
+                padding-top: 4.2em;
+                font-size: 0.74em;
+                font-family: monospace;
+                white-space: pre-wrap;
+            }
+
+            div.dictionary div.control {
+                position: fixed;
+                background-color: #061827;
+                padding: 0.5em;
+            }
+
+            div.dictionary div.control:hover {
+                cursor: pointer;
+                background-color: #5fabea;
+                color: rgb(0, 0, 0);
+            }
+
+            div.dictionary div#dictword {
+                position: fixed;
+                background-color: #09281b;
+                padding: 0.5em;
+                right: 2vw;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="topbar colored">
+            <div class="word sample nom" onclick="topbar_click()">Nominative</div>
+            <div class="word sample acc" onclick="topbar_click()">Accusative</div>
+            <div class="word sample dat" onclick="topbar_click()">Dative</div>
+            <div class="word sample abl" onclick="topbar_click()">Ablative</div>
+            <div class="word sample gen" onclick="topbar_click()">Genitive</div>
+            <div class="word sample voc" onclick="topbar_click()">Vocative</div>
+            <div class="word sample loc" onclick="topbar_click()">Locative</div>
+            <div class="word sample pas grey" onclick="topbar_click()">Passive</div>
+            <div class="word sample dep grey" onclick="topbar_click()">Deponent</div>
+
+            <div class="word title">Against Quintus Caecilius (M. Tullius Cicero)</div>
+
+            <div class="word rainbow" onclick="open_github()">Rainbow Latin Reader</div>
+        </div>
+
+        <div class="navigation">
+            <a href="index.html">Index</a>
+                    <a href="phi0474.phi004_1.html">1 - 20</a>
+                    <a href="phi0474.phi004_2.html">21 - 40</a>
+                    <a href="phi0474.phi004_3.html">41 - 60</a>
+                    <a href="phi0474.phi004_4.html">61 - 80</a>
+                    <div class="current-page">81 - 83</div>
+        </div>
+
+        <div class="dictionary" id="dictwindow">
+            <div class="control" onclick="close_dict()">[Close]</div>
+            <div id="dictword"></div>
+            <div class="content" id="dictcontent"></div>
+        </div>
+
+        <table id="maintable" class="section colored">
+            <tr>
+                <td class="margin">&nbsp;</td>
+
+                <td class="title">
+                    <h2>Against Quintus Caecilius</h2>
+                    <div class="author"><i>Author: M. Tullius Cicero</i></div>
+                </td>
+
+                <td class="english">
+                    <div class="translator"><i>Translator: C. D. Yonge</i></div>
+                </td>
+            </tr>
+
+            <tr id="s81">
+                <td class="margin"><a href="#s81">81</a></td>
+
+                <td class="latin">
+                    <div class="ck word acc" onclick="dict('quam')">quam</div> <div class="ck word" onclick="dict('ob')">ob</div> <div class="ck word acc" onclick="dict('rem')">rem</div> <div class="ck word acc" onclick="dict('hoc')">hoc</div> <div class="ck word" onclick="dict('statuere')">statuere</div>, <div class="ck word voc" onclick="dict('iudices')">iudices</div>, <div class="ck word" onclick="dict('debetis')">debetis</div>, <div class="ck word" onclick="dict('Q')">Q</div>. <div class="ck word acc" onclick="dict('Caecilium')">Caecilium</div>, <div class="ck word" onclick="dict('de')">de</div> <div class="ck word abl" onclick="dict('quo')">quo</div> <div class="ck word nom" onclick="dict('nulla')">nulla</div> <div class="ck word" onclick="dict('umquam')">umquam</div> <div class="ck word nom" onclick="dict('opinio')">opinio</div> <div class="ck word" onclick="dict('fuerit')">fuerit</div> <div class="ck word nom" onclick="dict('nullaque')">nullaque</div> <div class="ck word" onclick="dict('in')">in</div> <div class="ck word abl" onclick="dict('hoc')">hoc</div> <div class="ck word abl" onclick="dict('ipso')">ipso</div> <div class="ck word abl" onclick="dict('iudicio')">iudicio</div> <div class="ck word nom" onclick="dict('exspectatio')">exspectatio</div> <div class="ck word nom" onclick="dict('futura')">futura</div> <div class="ck word" onclick="dict('sit')">sit</div>, <div class="ck word nom" onclick="dict('qui')">qui</div> <div class="ck word" onclick="dict('neque')">neque</div> <div class="ck word" onclick="dict('ut')">ut</div> <div class="ck word" onclick="dict('ante')">ante</div> <div class="ck word acc" onclick="dict('collectam')">collectam</div> <div class="ck word acc" onclick="dict('famam')">famam</div> <div class="ck word" onclick="dict('conservet')">conservet</div> <div class="ck word" onclick="dict('neque')">neque</div> <div class="ck word" onclick="dict('uti')">uti</div> <div class="ck word gen" onclick="dict('reliqui')">reliqui</div> <div class="ck word gen" onclick="dict('temporis')">temporis</div> <div class="ck word acc" onclick="dict('spem')">spem</div> <div class="ck word" onclick="dict('confirmet')">confirmet</div> <div class="ck word" onclick="dict('laborat')">laborat</div>, <div class="ck word" onclick="dict('non')">non</div> <div class="ck word" onclick="dict('nimis')">nimis</div> <div class="ck word acc" onclick="dict('hanc')">hanc</div> <div class="ck word acc" onclick="dict('causam')">causam</div> <div class="ck word" onclick="dict('severe')">severe</div>, <div class="ck word" onclick="dict('non')">non</div> <div class="ck word" onclick="dict('nimis')">nimis</div> <div class="ck word" onclick="dict('accurate')">accurate</div>, <div class="ck word" onclick="dict('non')">non</div> <div class="ck word" onclick="dict('nimis')">nimis</div> <div class="ck word" onclick="dict('diligenter')">diligenter</div> <div class="ck word acc" onclick="dict('acturum')">acturum</div>. <div class="ck word" onclick="dict('habet')">habet</div> <div class="ck word" onclick="dict('enim')">enim</div> <div class="ck word" onclick="dict('nihil')">nihil</div> <div class="ck word acc" onclick="dict('quod')">quod</div> <div class="ck word" onclick="dict('in')">in</div> <div class="ck word abl" onclick="dict('offensione')">offensione</div> <div class="ck word" onclick="dict('deperdat')">deperdat</div>; <div class="ck word" onclick="dict('ut')">ut</div> <div class="ck word" onclick="dict('turpissime')">turpissime</div> <div class="ck word" onclick="dict('flagitiosissimeque')">flagitiosissimeque</div> <div class="ck word" onclick="dict('discedat')">discedat</div>, <div class="ck word" onclick="dict('nihil')">nihil</div> <div class="ck word" onclick="dict('de')">de</div> <div class="ck word abl" onclick="dict('suis')">suis</div> <div class="ck word abl" onclick="dict('veteribus')">veteribus</div> <div class="ck word abl" onclick="dict('ornamentis')">ornamentis</div> <div class="ck word" onclick="dict('requiret')">requiret</div>.
+                </td>
+
+                <td class="english">
+                    You, therefore, O judges ought to come to this decision, that Quintus Caecilius of whom no one has ever had any opinion, and from whom even in this very trial nothing could be expected&#8212;who takes no trouble either to preserve a reputation previously acquired, or to give grounds for hope of himself in future times&#8212;will not be likely to conduct this cause with too much severity, with too much accuracy, or with too much diligence. For he has nothing which he can lose by disappointing public expectation; even if he were to come off ever so shamefully, or ever so infamously, he will lose no credit which he at present enjoys.
+                </td>
+            </tr>
+            <tr id="s82">
+                <td class="margin"><a href="#s82">82</a></td>
+
+                <td class="latin">
+                    <div class="ck word" onclick="dict('A')">A</div> <div class="ck word abl" onclick="dict('nobis')">nobis</div> <div class="ck word acc" onclick="dict('multos')">multos</div> <div class="ck word acc" onclick="dict('obsides')">obsides</div> <div class="ck word" onclick="dict('habet')">habet</div> <div class="ck word nom" onclick="dict('populus')">populus</div> <div class="ck word nom" onclick="dict('Romanus')">Romanus</div>, <div class="ck word acc" onclick="dict('quos')">quos</div> <div class="ck word" onclick="dict('ut')">ut</div> <div class="ck word acc" onclick="dict('incolumis')">incolumis</div> <div class="ck word" onclick="dict('conservare')">conservare</div>, <div class="ck word dep" onclick="dict('tueri')">tueri</div>, <div class="ck word" onclick="dict('confirmare')">confirmare</div> <div class="ck word" onclick="dict('ac')">ac</div> <div class="ck word" onclick="dict('recuperare')">recuperare</div> <div class="ck word" onclick="dict('possimus')">possimus</div>, <div class="ck word abl" onclick="dict('omni')">omni</div> <div class="ck word abl" onclick="dict('ratione')">ratione</div> <div class="ck word" onclick="dict('erit')">erit</div> <div class="ck word nom" onclick="dict('dimicandum')">dimicandum</div>. <div class="ck word" onclick="dict('habet')">habet</div> <div class="ck word acc" onclick="dict('honorem')">honorem</div> <div class="ck word acc" onclick="dict('quem')">quem</div> <div class="ck word" onclick="dict('petimus')">petimus</div>, <div class="ck word" onclick="dict('habet')">habet</div> <div class="ck word acc" onclick="dict('spem')">spem</div> <div class="ck word acc" onclick="dict('quam')">quam</div> <div class="ck word acc" onclick="dict('propositam')">propositam</div> <div class="ck word dat" onclick="dict('nobis')">nobis</div> <div class="ck word" onclick="dict('habemus')">habemus</div>, <div class="ck word" onclick="dict('habet')">habet</div> <div class="ck word acc" onclick="dict('existimationem')">existimationem</div> <div class="ck word abl" onclick="dict('multo')">multo</div> <div class="ck word abl" onclick="dict('sudore')">sudore</div> <div class="ck word abl" onclick="dict('labore')">labore</div> <div class="ck word abl" onclick="dict('vigiliisque')">vigiliisque</div> <div class="ck word acc" onclick="dict('collectam')">collectam</div>, <div class="ck word" onclick="dict('ut')">ut</div>, <div class="ck word" onclick="dict('si')">si</div> <div class="ck word" onclick="dict('in')">in</div> <div class="ck word abl" onclick="dict('hac')">hac</div> <div class="ck word abl" onclick="dict('causa')">causa</div> <div class="ck word acc" onclick="dict('nostrum')">nostrum</div> <div class="ck word acc" onclick="dict('officium')">officium</div> <div class="ck word" onclick="dict('ac')">ac</div> <div class="ck word acc" onclick="dict('diligentiam')">diligentiam</div> <div class="ck word" onclick="dict('probaverimus')">probaverimus</div>, <div class="ck word acc" onclick="dict('haec')">haec</div> <div class="ck word acc" onclick="dict('quae')">quae</div> <div class="ck word" onclick="dict('dixi')">dixi</div> <div class="ck word" onclick="dict('retinere')">retinere</div> <div class="ck word" onclick="dict('per')">per</div> <div class="ck word acc" onclick="dict('populum')">populum</div> <div class="ck word acc" onclick="dict('Romanum')">Romanum</div> <div class="ck word acc" onclick="dict('incolumia')">incolumia</div> <div class="ck word" onclick="dict('ac')">ac</div> <div class="ck word acc" onclick="dict('salva')">salva</div> <div class="ck word" onclick="dict('possimus')">possimus</div>; <div class="ck word" onclick="dict('si')">si</div> <div class="ck word nom" onclick="dict('tantulum')">tantulum</div> <div class="ck word nom" onclick="dict('offensum')">offensum</div> <div class="ck word nom" onclick="dict('titubatumque')">titubatumque</div> <div class="ck word" onclick="dict('sit')">sit</div>, <div class="ck word" onclick="dict('ut')">ut</div> <div class="ck word acc" onclick="dict('ea')">ea</div> <div class="ck word nom" onclick="dict('quae')">quae</div> <div class="ck word" onclick="dict('singillatim')">singillatim</div> <div class="ck word" onclick="dict('ac')">ac</div> <div class="ck word" onclick="dict('diu')">diu</div> <div class="ck word nom" onclick="dict('collecta')">collecta</div> <div class="ck word" onclick="dict('sunt')">sunt</div> <div class="ck word abl" onclick="dict('uno')">uno</div> <div class="ck word abl" onclick="dict('tempore')">tempore</div> <div class="ck word acc" onclick="dict('universa')">universa</div> <div class="ck word" onclick="dict('perdamus')">perdamus</div>.
+                </td>
+
+                <td class="english">
+                    From us the Roman people has many hostages which we must labour with all our might and by every possible means to preserve uninjured, to defend, to keep in safety, and to redeem; it has honour which we are desirous of; it has hope, which we constantly keep before our eyes; it has reputation, acquired with much sweat and labour day and night; so that if we prove our duty and industry in this cause, we may be able to preserve all those things which I have mentioned safe and unimpaired by the favour of the Roman people; but if we trip and stumble ever so little, we may at one moment lose the whole of those things which have been collected one by one and by slow degrees.
+                </td>
+            </tr>
+            <tr id="s83">
+                <td class="margin"><a href="#s83">83</a></td>
+
+                <td class="latin">
+                    <div class="ck word" onclick="dict('quapropter')">quapropter</div>, <div class="ck word voc" onclick="dict('iudices')">iudices</div>, <div class="ck word nom" onclick="dict('vestrum')">vestrum</div> <div class="ck word" onclick="dict('est')">est</div> <div class="ck word" onclick="dict('deligere')">deligere</div> <div class="ck word acc" onclick="dict('quem')">quem</div> <div class="ck word" onclick="dict('existimetis')">existimetis</div> <div class="ck word" onclick="dict('facillime')">facillime</div> <div class="ck word" onclick="dict('posse')">posse</div> <div class="ck word acc" onclick="dict('magnitudinem')">magnitudinem</div> <div class="ck word gen" onclick="dict('causae')">causae</div> <div class="ck word" onclick="dict('ac')">ac</div> <div class="ck word gen" onclick="dict('iudici')">iudici</div> <div class="ck word" onclick="dict('sustinere')">sustinere</div> <div class="ck word abl" onclick="dict('fide')">fide</div>, <div class="ck word abl" onclick="dict('diligentia')">diligentia</div>, <div class="ck word abl" onclick="dict('consilio')">consilio</div>, <div class="ck word abl" onclick="dict('auctoritate')">auctoritate</div>. <div class="ck word nom" onclick="dict('vos')">vos</div> <div class="ck word" onclick="dict('si')">si</div> <div class="ck word dat" onclick="dict('mihi')">mihi</div> <div class="ck word" onclick="dict('Q')">Q</div>. <div class="ck word acc" onclick="dict('Caecilium')">Caecilium</div> <div class="ck word" onclick="dict('anteposueritis')">anteposueritis</div>, <div class="ck word nom" onclick="dict('ego')">ego</div> <div class="ck word acc" onclick="dict('me')">me</div> <div class="ck word abl" onclick="dict('dignitate')">dignitate</div> <div class="ck word acc" onclick="dict('superatum')">superatum</div> <div class="ck word" onclick="dict('non')">non</div> <div class="ck word dep" onclick="dict('arbitrabor')">arbitrabor</div>: <div class="ck word nom" onclick="dict('populus')">populus</div> <div class="ck word nom" onclick="dict('Romanus')">Romanus</div> <div class="ck word" onclick="dict('ne')">ne</div> <div class="ck word" onclick="dict('tam')">tam</div> <div class="ck word acc" onclick="dict('honestam')">honestam</div>, <div class="ck word" onclick="dict('tam')">tam</div> <div class="ck word acc" onclick="dict('severam')">severam</div> <div class="ck word acc" onclick="dict('diligentemque')">diligentemque</div> <div class="ck word acc" onclick="dict('accusationem')">accusationem</div> <div class="ck word" onclick="dict('neque')">neque</div> <div class="ck word dat" onclick="dict('vobis')">vobis</div> <div class="ck word" onclick="dict('placuisse')">placuisse</div> <div class="ck word" onclick="dict('neque')">neque</div> <div class="ck word dat" onclick="dict('ordini')">ordini</div> <div class="ck word dat" onclick="dict('vestro')">vestro</div> <div class="ck word" onclick="dict('placere')">placere</div> <div class="ck word dep" onclick="dict('arbitretur')">arbitretur</div>, <div class="ck word" onclick="dict('providete')">providete</div>.
+                </td>
+
+                <td class="english">
+                    On which account it is your business, O judges, to select him who you think can most easily sustain this great cause and trial with integrity, with diligence, with wisdom, and with authority. If you prefer Quintus Caecilius to me, I shall not think that I am surpassed in dignity; but take you care that the Roman people do not think that a prosecution as honest, as severe, as diligent as this would have been in my hands, was neither pleasing to yourselves nor to your body.
+                </td>
+            </tr>
+        </table>
+
+        <div class="navigation">
+            <a href="index.html">Index</a>
+                    <a href="phi0474.phi004_1.html">1 - 20</a>
+                    <a href="phi0474.phi004_2.html">21 - 40</a>
+                    <a href="phi0474.phi004_3.html">41 - 60</a>
+                    <a href="phi0474.phi004_4.html">61 - 80</a>
+                    <div class="current-page">81 - 83</div>
+        </div>
+
+        <div class="footer">
+			<b>Rainbow Latin Reader</b> by <a href="https://github.com/bolner" target="_blank">Tamas Bolner</a>. Based on 3 projects:
+			<a href="https://github.com/PerseusDL/canonical-latinLit" target="_blank">Perseus canonical Latin literature</a>,
+			<a href="https://github.com/lascivaroma/latin-lemmatized-texts" target="_blank">Lemmatized Latin texts by Thibault Clérice et al.</a>
+			and <a href="https://mk270.github.io/whitakers-words/dictionary.html" target="_blank">Whitaker's Words</a>.
+		</div>
+
+        <script>
+            var dictionary = {"quam":"qu.am                PRON   1 0 ACC S F\n[XXXAO]\nwho; that; which, what; of which kind/degree; person/thing/time/point that;\nwho/what/which?, what/which one/man/person/thing? what kind/type of?;\nwho/whatever, everyone who, all that, anything that;\nany; anyone/anything, any such; unspecified some; (after si/sin/sive/ne);\nwho?, which?, what?; what kind of?;\nquam                 ADV    POS\nquam  ADV   [XXXAX]\nhow, how much; as, than; [quam \u002B superlative =\u003E as ... as possible];\nquam                 CONJ\nquam  CONJ   [XXXDX]    lesser\nhow, than;","ob":"ob                   PREP   ACC\nob  PREP  ACC   [XXXAX]\non account of, for the sake of, for; instead of; right before;","rem":"r.em                 N      5 1 ACC S F\nres, rei  N (5th) F   [XXXAX]\nthing; event/affair/business; fact; cause; property; [~ familiaris =\u003E property]","hoc":"h.oc                 PRON   3 1 NOM S N\nh.oc                 PRON   3 1 ABL S M\nh.oc                 PRON   3 1 ABL S N\nh.oc                 PRON   3 1 ACC S N\nhic, haec, hoc  PRON   [XXXAX]\nthis; these (pl.); (also DEMONST);","statuere":"statu.ere            V      3 1 PRES ACTIVE  INF 0 X\nstatu.ere            V      3 1 PRES PASSIVE IND 2 S      Early     uncommon\nstatu.ere            V      3 1 PRES PASSIVE IMP 2 S\nstatu.ere            V      3 1 FUT  PASSIVE IND 2 S\nstatu.ere            V      3 1 PERF ACTIVE  IND 3 P\nstatuo, statuere, statui, statutus  V (3rd)   [XXXAX]\nset up, establish, set, place, build; decide, think;","iudices":"iudic.es             N      3 1 NOM P M\niudic.es             N      3 1 VOC P M\niudic.es             N      3 1 ACC P M\njudex, judicis  N (3rd) M   [XLXAX]\njudge; juror;\niudic.es             V      1 1 PRES ACTIVE  SUB 2 S\njudico, judicare, judicavi, judicatus  V (1st)   [XLXDX]    lesser\njudge, give judgment; sentence; conclude, decide; declare, appraise;","debetis":"deb.etis             V      2 1 PRES ACTIVE  IND 2 P\ndebeo, debere, debui, debitus  V (2nd)   [XXXAO]\nowe; be indebted/responsible for/obliged/bound/destined; ought, must, should;","Q":"q                    N      9 8 X   X M\nQ., abb.  N M   [XXXDX]    lesser\nQuintus (Roman praenomen); (abb. Q.);","Caecilium":"caecili.um           N      1 1 GEN P F                   uncommon\ncaecilia, caeciliae  N (1st) F   [XAXFO]    veryrare\nblind-worm; kind of lizard/lettuce (L\u002BS);","de":"de                   PREP   ABL\nde  PREP  ABL   [XXXAO]\ndown/away from, from, off; about, of, concerning; according to; with regard to;","quo":"qu.o                 PRON   1 0 ABL S M\nqu.o                 PRON   1 0 ABL S N\n[XXXAO]\nwho; that; which, what; of which kind/degree; person/thing/time/point that;\nwho/what/which?, what/which one/man/person/thing? what kind/type of?;\nwho/whatever, everyone who, all that, anything that;\nany; anyone/anything, any such; unspecified some; (after si/sin/sive/ne);\nwho?, which?, what?; what kind of?;\nquo                  ADV    POS\nquo  ADV   [XXXDX]    lesser\nwhere, to what place; to what purpose; for which reason, therefore;\nquo                  CONJ\nquo  CONJ   [XXXDX]    lesser\nwhither, in what place, where;","nulla":"null.a               ADJ    1 3 NOM S F POS\nnull.a               ADJ    1 3 VOC S F POS\nnull.a               ADJ    1 3 ABL S F POS\nnull.a               ADJ    1 3 NOM P N POS\nnull.a               ADJ    1 3 VOC P N POS\nnull.a               ADJ    1 3 ACC P N POS\nnullus, nulla, nullum (gen -ius)  ADJ   [XXXAX]\nno; none, not any; (PRONominal ADJ)","umquam":"umquam               ADV    POS\numquam  ADV   [XXXAX]\never, at any time;","opinio":"opinio               N      3 1 NOM S F\nopinio               N      3 1 VOC S F\nopinio, opinionis  N (3rd) F   [XXXDX]    lesser\nbelief, idea, opinion; rumor (Plater);","fuerit":"fu.erit              V      5 1 PERF ACTIVE  SUB 3 S\nfu.erit              V      5 1 FUTP ACTIVE  IND 3 S\nsum, esse, fui, futurus  V   [XXXAX]\nbe; exist; (also used to form verb perfect passive tenses) with NOM PERF PPL","nullaque":"que                  TACKON\n-que = and (enclitic, translated before attached word); completes plerus/uter;\nnull.a               ADJ    1 3 NOM S F POS\nnull.a               ADJ    1 3 VOC S F POS\nnull.a               ADJ    1 3 ABL S F POS\nnull.a               ADJ    1 3 NOM P N POS\nnull.a               ADJ    1 3 VOC P N POS\nnull.a               ADJ    1 3 ACC P N POS\nnullus, nulla, nullum (gen -ius)  ADJ   [XXXAX]\nno; none, not any; (PRONominal ADJ)","in":"in                   PREP   ABL\nin  PREP  ABL   [XXXAX]\nin, on, at (space); in accordance with/regard to/the case of; within (time);\nin                   PREP   ACC\nin  PREP  ACC   [XXXAX]\ninto; about, in the mist of; according to, after (manner); for; to, among;","ipso":"ips.o                PRON   6 2 ABL S M\nips.o                PRON   6 2 ABL S N\nipse, ipsa, ipsum  PRON   [XXXAO]\nhimself/herself/itself; the very/real/actual one; in person; themselves (pl.);","iudicio":"iudici.o             N      2 4 DAT S N\niudici.o             N      2 4 ABL S N\njudicium, judici(i)  N (2nd) N   [XLXAO]\ntrial, legal action/process; court/tribunal; courts; administration of justice;\njudgment/sentence/verdict; judging; jurisdiction/authority; opinion/belief;","exspectatio":"exspectatio          N      3 1 NOM S F\nexspectatio          N      3 1 VOC S F\nexspectatio, exspectationis  N (3rd) F   [XXXDX]    lesser\nexpectation; suspense;","futura":"futur.a              ADJ    1 1 NOM S F POS\nfutur.a              ADJ    1 1 VOC S F POS\nfutur.a              ADJ    1 1 ABL S F POS\nfutur.a              ADJ    1 1 NOM P N POS\nfutur.a              ADJ    1 1 VOC P N POS\nfutur.a              ADJ    1 1 ACC P N POS\nfuturus, futura, futurum  ADJ   [XXXAX]\nabout to be; future;\nfut.ura              VPAR   5 1 NOM S F FUT  ACTIVE  PPL\nfut.ura              VPAR   5 1 VOC S F FUT  ACTIVE  PPL\nfut.ura              VPAR   5 1 ABL S F FUT  ACTIVE  PPL\nfut.ura              VPAR   5 1 NOM P N FUT  ACTIVE  PPL\nfut.ura              VPAR   5 1 VOC P N FUT  ACTIVE  PPL\nfut.ura              VPAR   5 1 ACC P N FUT  ACTIVE  PPL\nsum, esse, fui, futurus  V   [XXXAX]\nbe; exist; (also used to form verb perfect passive tenses) with NOM PERF PPL","sit":"s.it                 V      5 1 PRES ACTIVE  SUB 3 S\nsum, esse, fui, futurus  V   [XXXAX]\nbe; exist; (also used to form verb perfect passive tenses) with NOM PERF PPL","qui":"qu.i                 PRON   1 0 NOM P M\n[XXXAO]\nwho; that; which, what; of which kind/degree; person/thing/time/point that;\nwho/what/which?, what/which one/man/person/thing? what kind/type of?;\nwho/whatever, everyone who, all that, anything that;\nany; anyone/anything, any such; unspecified some; (after si/sin/sive/ne);\nwho?, which?, what?; what kind of?;\nqu.i                 PRON   1 0 NOM S M\nwho; that; which, what; of which kind/degree; person/thing/time/point that;\nwho/whatever, everyone who, all that, anything that;\nany; anyone/anything, any such; unspecified some; (after si/sin/sive/ne);\nwho?, which?, what?; what kind of?;\nqui                  V      6 1 PRES ACTIVE  IMP 2 S\nqueo, quire, quivi(ii), quitus  V   [XXXBX]\nbe able;\nqui                  ADV    POS\nqui  ADV   [XXXAO]\nhow?; how so; in what way; by what/which means; whereby; at whatever price;","neque":"neque                ADV    POS\nneque  ADV   [XXXDX]    lesser\nnor; and not, not, neither;\nneque                CONJ\nneque  CONJ   [XXXAX]\nnor [neque..neque=\u003Eneither..nor; neque solum..sed etiam=\u003Enot only..but also];\nque                  TACKON\n-que = and (enclitic, translated before attached word); completes plerus/uter;\nn.e                  V      2 1 PRES ACTIVE  IMP 2 S\nneo, nere, nevi, netus  V (2nd)   [XXXDX]    lesser\nspin; weave; produce by spinning;\nne                   ADV    POS\nne  ADV   [XXXAX]\nnot; (intro clause of purpose with subj verb); [ne....quidem =\u003E not even];\ntruly, indeed, verily, assuredly; (particle of assurance); (w/personal PRON);\nne                   CONJ\nne  CONJ   [XXXAX]\nthat not, lest; (for negative of IMP);","ut":"ut                   CONJ\nut  CONJ   [XXXAX]\nto (\u002B subjunctive), in order that/to; how, as, when, while; even if;\n*","ante":"ante                 ADV    POS\nante  ADV   [XXXBO]\nbefore, previously, first, before this, earlier; in front/advance of; forwards;\nante                 PREP   ACC\nante  PREP  ACC   [XXXAO]\nin front/presence of, in view; before (space/time/degree); over against, facing\nant.e                N      3 3 LOC S M\nant.e                N      3 3 DAT S M                   Early\nant.e                N      3 3 ABL S M\nantis, antis  N (3rd) M   [XXXDS]    lesser\nrows (pl.) (vines/plants); ranks (soldiers); files (cavalry);","collectam":"collect.am           N      1 1 ACC S F\ncollecta, collectae  N (1st) F   [XXXFO]    veryrare\ncontribution; collection; meeting/assemblage (L\u002BS); Collect at Mass (eccl.);\ncollect.am           ADJ    1 1 ACC S F POS\ncollectus, collecta -um, collectior -or -us, collectissimus -a -um  ADJ   [XXXEO]    uncommon\ncompact (of style), concise; restricted; contracted, narrow; shut (Ecc);\ncollect.am           VPAR   3 1 ACC S F PERF PASSIVE PPL\ncolligo, colligere, collegi, collectus  V (3rd) TRANS   [XXXAO]\ncollect, assemble, bring/gather/hold/keep together; combine; harvest; pick up;\nobtain/acquire, amass; rally; recover; sum up; deduce, infer; compute, add up;\ncolligo, colligere, collexi, collectus  V (3rd) TRANS   [XXXFO]    veryrare\ncollect, assemble, bring/gather/hold/keep together; combine; harvest; pick up;\nobtain/acquire, amass; rally; recover; sum up; deduce, infer; compute, add up;","famam":"fam.am               N      1 1 ACC S F\nfama, famae  N (1st) F   [XXXAX]\nrumor; reputation; tradition; fame, public opinion, ill repute; report, news;","conservet":"conserv.et           V      1 1 PRES ACTIVE  SUB 3 S\nconservo, conservare, conservavi, conservatus  V (1st)   [XXXBO]\nkeep safe/intact, save (from danger); preserve, maintain; spare; keep/observe;","uti":"ut.i                 V      3 1 PRES         INF 0 X\nutor, uti, usus sum  V (3rd) DEP   [XXXAX]\nuse, make use of, enjoy; enjoy the friendship of (with ABL);\nuti                  CONJ\nuti  CONJ   [XXXAX]\nin order that; that, so that; as, when; [ut primum =\u003E as soon as];","reliqui":"reliqu.i             V      3 1 PERF ACTIVE  IND 1 S\nrelinquo, relinquere, reliqui, relictus  V (3rd)   [XXXAX]\nleave behind, abandon; (pass.) be left, remain; bequeath;\nreliqu.i             N      2 2 GEN S N\nreliqu.i             N      2 2 LOC S N\nreliquum, reliqui  N (2nd) N   [XXXAO]\nthat left after subtraction/elimination, remainder, residue, rest; balance owed\nmortal remains (pl.); future, things yet to be, subsequent events;\nreliqu.i             ADJ    1 1 GEN S M POS\nreliqu.i             ADJ    1 1 GEN S N POS\nreliqu.i             ADJ    1 1 NOM P M POS\nreliqu.i             ADJ    1 1 VOC P M POS\nreliquus, reliqua, reliquum  ADJ   [XXXAO]\nrest of/remaining/available/left; surviving; future/further; yet to be/owed;","temporis":"tempor.is            N      3 2 GEN S N\ntempus, temporis  N (3rd) N   [XXXAX]\ntime, condition, right time; season, occasion; necessity;","spem":"sp.em                N      5 1 ACC S F\nSpes, Spei  N (5th) F   [XEXDO]    lesser\nSpes, goddess of hope; hope personified;\nspes, spei  N (5th) F   [XXXAO]\nhope/anticipation/expectation; prospect/hope/promise; (inheriting/succeeding);\nobject/embodiment of hope; [optio ad ~ =\u003E junior hoping to make centurion];","confirmet":"confirm.et           V      1 1 PRES ACTIVE  SUB 3 S\nconfirmo, confirmare, confirmavi, confirmatus  V (1st) TRANS   [XXXAO]\nstrengthen, develop, build up (w/troops); make secure/firm; reassure; secure;\nassert positively; declare, prove, confirm, support; sanction; encourage;","laborat":"labor.at             V      1 1 PRES ACTIVE  IND 3 S\nlaboro, laborare, laboravi, laboratus  V (1st)   [XXXAX]\nwork, labor; produce, take pains; be troubled/sick/oppressed, be in distress;","non":"non                  N      9 8 X   X M\nNon., abb.  N M   [XXXDX]    lesser\nNones (pl.), abb. Non.; 7th of month, March, May, July, Oct., 5th elsewhen;\nnon                  ADV    POS\nnon  ADV   [XXXAX]\nnot, by no means, no; [non modo ... sed etiam =\u003E not only ... but also];","nimis":"nimis                ADV    POS\nnimis  ADV   [XXXAX]\nvery much; too much; exceedingly;","hanc":"h.anc                PRON   3 1 ACC S F\nhic, haec, hoc  PRON   [XXXAX]\nthis; these (pl.); (also DEMONST);","causam":"caus.am              N      1 1 ACC S F\ncausa, causae  N (1st) F   [XXXAO]\ncause/reason/motive; origin, source, derivation; responsibility/blame; symptom;\noccasion, subject; plea, position; lawsuit, case, trial; proviso/stipulation;\nthing(s); [sine causa =\u003E in vain (Vulgate)];","severe":"sev.ere              V      3 1 PERF ACTIVE  IND 3 P\nsero, serere, sevi, satus  V (3rd)   [XXXDX]    lesser\nsow, plant; strew, scatter, spread; cultivate; beget, bring forth;\nsever.e              N      2 1 VOC S M\nSeverus, Severi  N (2nd) M   [DLIDZ]    Late  lesser\nSeverus; (Emperor Lucius Septimius Severus 193-211);\nsever.e              ADJ    1 1 VOC S M POS\nseverus, severa -um, severior -or -us, severissimus -a -um  ADJ   [XXXBX]\nstern, strict, severe; grave, austere; weighty, serious; unadorned, plain;\ne                    SUFFIX\n-ly; -ily;  Converting ADJ to ADV\nsever.e              ADV    POS\nseverus, severa -um, severior -or -us, severissimus -a -um  ADJ   [XXXBX]\nstern, strict, severe; grave, austere; weighty, serious; unadorned, plain;","accurate":"accur.ate            V      1 1 PRES ACTIVE  IMP 2 P\naccuro, accurare, accuravi, accuratus  V (1st) TRANS   [XXXCO]\naccurat.e            VPAR   1 1 VOC S M PERF PASSIVE PPL\ntake care of, attend to (duties/guests), give attention to; perform with care;\naccurat.e            ADJ    1 1 VOC S M POS\naccuratus, accurata -um, accuratior -or -us, accuratissimus -a -um  ADJ   [XXXCO]\naccurate, exact, with care, meticulous; carefully performed/prepared; finished;\naccurate             ADV    POS\naccurate, accuratius, accuratissime  ADV   [XXXCO]\ncarefully, accurately, precisely, exactly; nicely; painstakingly, meticulous;","diligenter":"diligenter           ADV    POS\ndiligenter, diligentius, diligentissime  ADV   [XXXCO]\ncarefully; attentively; diligently; scrupulously; thoroughly/completely/well;","acturum":"act.urum             VPAR   3 1 NOM S N FUT  ACTIVE  PPL\nact.urum             VPAR   3 1 VOC S N FUT  ACTIVE  PPL\nact.urum             VPAR   3 1 ACC S M FUT  ACTIVE  PPL\nact.urum             VPAR   3 1 ACC S N FUT  ACTIVE  PPL\nago, agere, egi, actus  V (3rd)   [XXXAO]\ndrive/urge/conduct/act; spend (time w/cum); thank (w/gratias); deliver (speech)","habet":"hab.et               V      2 1 PRES ACTIVE  IND 3 S\nhabeo, habere, habui, habitus  V (2nd)   [XXXAX]\nhave, hold, consider, think, reason; manage, keep; spend/pass (time);","enim":"enim                 CONJ\nenim  CONJ   [XXXAX]\nnamely (postpos.); indeed; in fact; for; I mean, for instance, that is to say;","nihil":"nihil                N      9 9 X   X N\nnihil, undeclined  N N   [XXXAO]\nnothing; no; trifle/thing not worth mentioning; nonentity; nonsense; no concern","quod":"qu.od                PRON   1 0 NOM S N\nqu.od                PRON   1 0 ACC S N\n[XXXAO]\nwho; that; which, what; of which kind/degree; person/thing/time/point that;\nwho/whatever, everyone who, all that, anything that;\nany; anyone/anything, any such; unspecified some; (after si/sin/sive/ne);\nwho?, which?, what?; what kind of?;\nquod                 ADV    POS\nquod  ADV   [XXXDX]    lesser\nwith respect to which;\nquod                 CONJ\nquod  CONJ   [XXXDX]    lesser\nbecause, as far as, insofar as; [quod si =\u003E but if];","offensione":"offension.e          N      3 1 LOC S F\noffension.e          N      3 1 DAT S F                   Early\noffension.e          N      3 1 ABL S F\noffensio, offensionis  N (3rd) F   [XXXDX]    lesser\ndispleasure; accident;","deperdat":"deperd.at            V      3 1 PRES ACTIVE  SUB 3 S\ndeperdo, deperdere, deperdidi, deperditus  V (3rd) TRANS   [XXXCO]\nlose permanently/utterly (destruction); be deprived/desperate; destroy, ruin;","turpissime":"turpissi.me          ADJ    3 2 VOC S M SUPER\nturpis, turpe, turpior -or -us, turpissimus -a -um  ADJ   [XXXAX]\nugly; nasty; disgraceful; indecent; base, shameful, disgusting, repulsive;\nturpissime           ADV    SUPER\nturpe, turpius, turpissime  ADV   [XXXDS]    lesser\nrepulsively, disgracefully, shamelessly; in an ugly/unsightly manner;\nturpissime  ADV   [XXXFX]    veryrare\nbasely; shamefully; uglily; (found in Patrologiae Graecae, 19th Cent);","flagitiosissimeque":"que                  TACKON\n-que = and (enclitic, translated before attached word); completes plerus/uter;\nflagitiosissi.me     ADJ    1 1 VOC S M SUPER\nflagitiosus, flagitiosa -um, flagitiosior -or -us, flagitiosissimus -a -um  ADJ   [XXXDX]    lesser\ndisgraceful, shameful; infamous,  scandalous; profligate, dissolute;\ne                    SUFFIX\n-estly; -estily; most -ly, very -ly  Converting ADJ to ADV\nflagitiosissi.me     ADV    SUPER\nflagitiosus, flagitiosa -um, flagitiosior -or -us, flagitiosissimus -a -um  ADJ   [XXXDX]    lesser\ndisgraceful, shameful; infamous,  scandalous; profligate, dissolute;","discedat":"disced.at            V      3 1 PRES ACTIVE  SUB 3 S\ndiscedo, discedere, discessi, discessus  V (3rd)   [XXXAX]\ngo/march off, depart, withdraw; scatter, dissipate; abandon; lay down (arms);","suis":"su.is                N      2 1 LOC P M\nsu.is                N      2 1 DAT P M\nsu.is                N      2 1 ABL P M\nsuus, sui  N (2nd) M   [XXXDX]    lesser\nhis men (pl.), his friends;\nsu.is                N      2 2 LOC P N\nsu.is                N      2 2 DAT P N\nsu.is                N      2 2 ABL P N\nsuum, sui  N (2nd) N   [XXXDX]    lesser\nhis property (pl.); [se suaque =\u003E themselves and their possessions];\nsu.is                ADJ    1 1 DAT P X POS\nsu.is                ADJ    1 1 ABL P X POS\nsuus, sua, suum  ADJ   [XXXDX]    lesser\nhis/one\u0027s (own), her (own), hers, its (own); (pl.) their (own), theirs;\nsu.is                V      3 1 PRES ACTIVE  IND 2 S\nsuo, suere, sui, sutus  V (3rd)   [XXXDX]    lesser\nsew together/up, stitch;\nsu.is                N      3 3 GEN S C\nsu.is                N      3 3 NOM P C                   Early     uncommon\nsu.is                N      3 3 ACC P C                   Early\nsus, suis  N (3rd) C   [XXXDX]    lesser\nswine; hog, pig, sow;","veteribus":"veter.ibus           N      3 1 LOC P M\nveter.ibus           N      3 1 DAT P M\nveter.ibus           N      3 1 ABL P M\nvetus, veteris  N (3rd) M   [XXXDX]    lesser\nancients (pl.), men of old, forefathers;\nveter.ibus           N      3 2 LOC P N\nveter.ibus           N      3 2 DAT P N\nveter.ibus           N      3 2 ABL P N\nvetus, veteris  N (3rd) N   [XXXDX]    lesser\nold/ancient times (pl.), antiquity; earlier events; old traditions/ways;\nveter.ibus           ADJ    3 1 DAT P X POS\nveter.ibus           ADJ    3 1 ABL P X POS\nvetus, veteris (gen.), veterior -or -us, veterrimus -a -um  ADJ   [XXXAX]\nold, aged, ancient; former; veteran, experienced; long standing, chronic;","ornamentis":"ornament.is          N      2 2 LOC P N\nornament.is          N      2 2 DAT P N\nornament.is          N      2 2 ABL P N\nornamentum, ornamenti  N (2nd) N   [XXXBX]\nequipment; decoration; jewel; ornament, trappings;","requiret":"requir.et            V      3 1 FUT  ACTIVE  IND 3 S\nrequiro, requirere, requisivi, requisitus  V (3rd)   [XXXAX]\nrequire, seek, ask for; need; miss, pine for;","A":"a                    N      9 8 X   X M\nA., abb.  N M   [XXXCG]\nAulus (Roman praenomen); (abb. A./Au.); [Absolvo, Antiquo =\u003E free, reject];\na., abb.  N M   [XXXDG]    lesser\nyear; abb. ann./a.; [regnavit a(nnis). XLIIII =\u003E he reigned for 44 years];\na                    PREP   ABL\na  PREP  ABL   [XXXAO]\nby (agent), from (departure, cause, remote origin/time); after (reference);\na                    PREP   ACC\na  PREP  ACC   [XXXCO]\nante, abb. a.; [in calendar expression a. d. = ante diem =\u003E before the day];\na                    INTERJ\na  INTERJ   [XXXBO]\nAh!; (distress/regret/pity, appeal/entreaty, surprise/joy, objection/contempt);","nobis":"n.obis               PRON   5 3 DAT P C\nn.obis               PRON   5 3 ABL P C\n[XXXAX]\nwe (pl.), us;","multos":"mult.os              ADJ    1 1 ACC P M POS\nmultus, multa -um, -, plurimus -a -um  ADJ   [XXXAX]\nmuch, many, great, many a; large, intense, assiduous; tedious;\nmult.os              N      2 1 ACC P M\n-, multi  N (2nd) M   [XXXDX]    lesser\nmany men/people (pl.); the common/ordinary people; the many; common herd;","obsides":"obsid.es             N      3 1 NOM P C\nobsid.es             N      3 1 VOC P C\nobsid.es             N      3 1 ACC P C\nobses, obsidis  N (3rd) C   [XWXDX]    lesser\nhostage; pledge, security;\nobsid.es             V      2 1 PRES ACTIVE  IND 2 S\nobsideo, obsidere, obsedi, obsessus  V (2nd)   [XWXBX]\nblockade, besiege, invest, beset; take possession of;\nobsid.es             V      3 1 FUT  ACTIVE  IND 2 S\nobsido, obsidere, -, -  V (3rd)   [XWXDX]    lesser\nbesiege; occupy;","populus":"popul.us             N      2 1 NOM S M\npopulus, populi  N (2nd) M   [XXXAO]\npeople, nation, State; public/populace/multitude/crowd; a following;\nmembers of a society/sex; region/district (L\u002BS); army (Bee);\npopul.us             N      2 1 NOM S F\npopulus, populi  N (2nd) F   [XAXCO]\npoplar tree; (long o);","Romanus":"roman.us             N      2 1 NOM S M\nromanus, romani  N (2nd) M   [XXXBX]\nRoman; the Romans (pl.);\nroman.us             ADJ    1 1 NOM S M POS\nromanus, romana, romanum  ADJ   [XXXAX]\nRoman;","quos":"qu.os                PRON   1 0 ACC P M\n[XXXAO]\nwho; that; which, what; of which kind/degree; person/thing/time/point that;\nwho/what/which?, what/which one/man/person/thing? what kind/type of?;\nwho/whatever, everyone who, all that, anything that;\nany; anyone/anything, any such; unspecified some; (after si/sin/sive/ne);\nwho?, which?, what?; what kind of?;","incolumis":"incolum.is           ADJ    3 2 NOM S C POS\nincolum.is           ADJ    3 2 VOC S C POS\nincolum.is           ADJ    3 2 GEN S X POS\nincolum.is           ADJ    3 2 ACC P C POS\nincolumis, incolumis, incolume  ADJ   [XXXBX]\nunharmed, uninjured; alive, safe; unimpaired;","conservare":"conserv.are          V      1 1 PRES ACTIVE  INF 0 X\nconserv.are          V      1 1 PRES PASSIVE IND 2 S      Early\nconserv.are          V      1 1 PRES PASSIVE IMP 2 S\nconservo, conservare, conservavi, conservatus  V (1st)   [XXXBO]\nkeep safe/intact, save (from danger); preserve, maintain; spare; keep/observe;\nSyncope   r =\u003E v.r\nSyncopated perfect often drops the \u0027v\u0027 and contracts vowel\nconservav.ere        V      1 1 PERF ACTIVE  IND 3 P\nconservo, conservare, conservavi, conservatus  V (1st)   [XXXBO]\nkeep safe/intact, save (from danger); preserve, maintain; spare; keep/observe;","tueri":"tu.eri               V      2 1 PRES         INF 0 X\ntueor, tueri, tuitus sum  V (2nd) DEP   [XXXAX]\ntueor, tueri, tutus sum  V (2nd) DEP   [XXXDX]    lesser\nsee, look at; protect, watch; uphold;","confirmare":"confirm.are          V      1 1 PRES ACTIVE  INF 0 X\nconfirm.are          V      1 1 PRES PASSIVE IND 2 S      Early\nconfirm.are          V      1 1 PRES PASSIVE IMP 2 S\nconfirmo, confirmare, confirmavi, confirmatus  V (1st) TRANS   [XXXAO]\nstrengthen, develop, build up (w/troops); make secure/firm; reassure; secure;\nassert positively; declare, prove, confirm, support; sanction; encourage;\nSyncope   r =\u003E v.r\nSyncopated perfect often drops the \u0027v\u0027 and contracts vowel\nconfirmav.ere        V      1 1 PERF ACTIVE  IND 3 P\nconfirmo, confirmare, confirmavi, confirmatus  V (1st) TRANS   [XXXAO]\nstrengthen, develop, build up (w/troops); make secure/firm; reassure; secure;\nassert positively; declare, prove, confirm, support; sanction; encourage;","ac":"ac                   CONJ\nac  CONJ   [XXXAO]\nand, and also, and besides;","recuperare":"recuper.are          V      1 1 PRES ACTIVE  INF 0 X\nrecuper.are          V      1 1 PRES PASSIVE IND 2 S      Early\nrecuper.are          V      1 1 PRES PASSIVE IMP 2 S\nrecupero, recuperare, recuperavi, recuperatus  V (1st)   [XXXBX]\nregain, restore, restore to health; refresh, recuperate;\nSyncope   r =\u003E v.r\nSyncopated perfect often drops the \u0027v\u0027 and contracts vowel\nrecuperav.ere        V      1 1 PERF ACTIVE  IND 3 P\nrecupero, recuperare, recuperavi, recuperatus  V (1st)   [XXXBX]\nregain, restore, restore to health; refresh, recuperate;","possimus":"poss.imus            V      5 2 PRES ACTIVE  SUB 1 P\npossum, posse, potui, -  V   [XXXAX]\nbe able, can; [multum  posse =\u003E have much/more/most influence/power];","omni":"omn.i                ADJ    3 2 DAT S X POS\nomn.i                ADJ    3 2 ABL S X POS\nomnis, omnis, omne  ADJ   [XXXAC]\neach, every, every one (of a number); all (pl.); all/the whole of;\nomn.i                N      3 4 LOC S N                   Early\nomn.i                N      3 4 DAT S N\nomn.i                N      3 4 ABL S N\nomne, omnis  N (3rd) N   [XXXCC]\nall things (pl.); everything; a/the whole, entity, unit;\nomn.i                N      3 3 LOC S C                   Early\nomn.i                N      3 3 DAT S C\nomn.i                N      3 3 ABL S C\nomnis, omnis  N (3rd) C   [XXXBC]\nall men (pl.), all persons;","ratione":"ration.e             N      3 1 LOC S F\nration.e             N      3 1 DAT S F                   Early\nration.e             N      3 1 ABL S F\nratio, rationis  N (3rd) F   [XXXAX]\naccount, reckoning, invoice; plan; prudence; method; reasoning; rule; regard;","erit":".erit                V      5 1 FUT  ACTIVE  IND 3 S\nsum, esse, fui, futurus  V   [XXXAX]\nbe; exist; (also used to form verb perfect passive tenses) with NOM PERF PPL","dimicandum":"dimic.andum          VPAR   1 1 NOM S N FUT  PASSIVE PPL\ndimic.andum          VPAR   1 1 VOC S N FUT  PASSIVE PPL\ndimic.andum          VPAR   1 1 ACC S M FUT  PASSIVE PPL\ndimic.andum          VPAR   1 1 ACC S N FUT  PASSIVE PPL\ndimico, dimicare, dimicavi, dimicatus  V (1st) INTRANS   [XWXBO]\ndimico, dimicare, dimicui, dimicatus  V (1st) INTRANS   [XWXEO]    uncommon\nfight, battle; struggle/contend/strive; brandish weapons; be in conflict/peril;","honorem":"honor.em             N      3 1 ACC S M\nhonor, honoris  N (3rd) M   [XXXAO]\nhonor; respect/regard; mark of esteem, reward; dignity/grace; public office;\nhonor.em             V      1 1 PRES ACTIVE  SUB 1 S\nhonoro, honorare, honoravi, honoratus  V (1st)   [XXXBX]\nrespect, honor;\nhonor.em             N      3 1 ACC S M\nhonos, honoris  N (3rd) M   [BXXAO]    Early\nhonor; respect/regard; mark of esteem, reward; dignity/grace; public office;","quem":"qu.em                PRON   1 0 ACC S M\n[XXXAO]\nwho; that; which, what; of which kind/degree; person/thing/time/point that;\nwho/what/which?, what/which one/man/person/thing? what kind/type of?;\nwho/whatever, everyone who, all that, anything that;\nany; anyone/anything, any such; unspecified some; (after si/sin/sive/ne);\nwho?, which?, what?; what kind of?;","petimus":"pet.imus             V      3 1 PRES ACTIVE  IND 1 P\npeto, petere, petivi, petitus  V (3rd)   [XXXAX]\nattack; aim at; desire; beg, entreat, ask (for); reach towards, make for;","propositam":"proposit.am          VPAR   3 1 ACC S F PERF PASSIVE PPL\npropono, proponere, proposui, propositus  V (3rd)   [XXXAX]\ndisplay; propose; relate; put or place forward;","habemus":"hab.emus             V      2 1 PRES ACTIVE  IND 1 P\nhabeo, habere, habui, habitus  V (2nd)   [XXXAX]\nhave, hold, consider, think, reason; manage, keep; spend/pass (time);","existimationem":"existimation.em      N      3 1 ACC S F\nexistimatio, existimationis  N (3rd) F   [XXXBO]\nopinion (good); reputation/name; esteem; judgment/view/estimation; credit;","multo":"mult.o               N      2 2 DAT S N\nmult.o               N      2 2 ABL S N\nmultum, multi  N (2nd) N   [XXXDX]    lesser\nmany things (pl.); much; many;\nmult.o               V      1 1 PRES ACTIVE  IND 1 S\nmulto, multare, multavi, multatus  V (1st) TRANS   [XLXCO]\npunish, fine; extract as forfeit; sentence to pay;\nmult.o               ADJ    1 1 DAT S M POS\nmult.o               ADJ    1 1 DAT S N POS\nmult.o               ADJ    1 1 ABL S M POS\nmult.o               ADJ    1 1 ABL S N POS\nmultus, multa -um, -, plurimus -a -um  ADJ   [XXXAX]\nmuch, many, great, many a; large, intense, assiduous; tedious;\nmulto                ADV    POS\nmulto  ADV   [XXXDX]    lesser\nmuch, by much, a great deal, very; most; by far; long (before/after);\nmult.o               N      2 1 DAT S M\nmult.o               N      2 1 ABL S M\n-, multi  N (2nd) M   [XXXDX]    lesser\nmany men/people (pl.); the common/ordinary people; the many; common herd;","sudore":"sudor.e              N      3 1 LOC S M\nsudor.e              N      3 1 DAT S M                   Early\nsudor.e              N      3 1 ABL S M\nsudor, sudoris  N (3rd) M   [XXXDX]    lesser\nsweat; hard labor;","labore":"labor.e              N      3 1 LOC S M\nlabor.e              N      3 1 DAT S M                   Early\nlabor.e              N      3 1 ABL S M\nlabor, laboris  N (3rd) M   [XXXAO]\nlabor/toil/exertion/effort/work; task/undertaking; production; childbirth;\npreoccupation/concern; struggle/suffering/distress/hardship/stress; wear\u002Btear;\nlabos, laboris  N (3rd) M   [BXXAO]    Early\nlabor/toil/exertion/effort/work; task/undertaking; production; childbirth;\npreoccupation/concern; struggle/suffering/distress/hardship/stress; wear\u002Btear;","vigiliisque":"que                  TACKON\n-que = and (enclitic, translated before attached word); completes plerus/uter;\nvigili.is            N      1 1 LOC P F\nvigili.is            N      1 1 DAT P F\nvigili.is            N      1 1 ABL P F\nvigilia, vigiliae  N (1st) F   [XXXBX]\nwatch (fourth part of the night), vigil, wakefulness;","si":"si                   CONJ\nsi  CONJ   [XXXAX]\nif, if only; whether; [quod si/si quis or quid =\u003E but if/if anyone or anything]","hac":"h.ac                 PRON   3 1 ABL S F\nhic, haec, hoc  PRON   [XXXAX]\nthis; these (pl.); (also DEMONST);\nhac                  ADV    POS\nhac  ADV   [XXXDX]    lesser\nhere, by this side, this way;","causa":"caus.a               N      1 1 NOM S F\ncaus.a               N      1 1 VOC S F\ncaus.a               N      1 1 ABL S F\ncausa, causae  N (1st) F   [XXXAO]\ncause/reason/motive; origin, source, derivation; responsibility/blame; symptom;\noccasion, subject; plea, position; lawsuit, case, trial; proviso/stipulation;\nthing(s); [sine causa =\u003E in vain (Vulgate)];\ncaus.a               V      1 1 PRES ACTIVE  IMP 2 S\ncauso, causare, causavi, causatus  V (1st) TRANS   [FXXEE]    Medieval  uncommon\ncause;\ncausa                PREP   GEN\ncausa  PREP  GEN   [XXXAO]\nfor sake/purpose of (preceded by GEN.), on account/behalf of, with a view to;\n*","nostrum":"nostr.um             PRON   5 3 GEN P C\n[XXXAX]\nwe (pl.), us;\nnostr.um             N      2 3 ACC S M\nnostr.um             N      2 3 GEN P M                   uncommon\nnoster, nostri  N (2nd) M   [XXXDX]    lesser\nour men (pl.);\nnostr.um             ADJ    1 2 NOM S N POS\nnostr.um             ADJ    1 2 VOC S N POS\nnostr.um             ADJ    1 2 ACC S M POS\nnostr.um             ADJ    1 2 ACC S N POS\nnoster, nostra, nostrum  ADJ   [XXXAX]\nour;","officium":"offici.um            N      2 4 NOM S N\noffici.um            N      2 4 VOC S N\noffici.um            N      2 4 ACC S N\noffici.um            N      2 4 GEN P N                   uncommon\nofficium, offici(i)  N (2nd) N   [XXXAX]\nduty, obligation; kindness; service, office;","diligentiam":"diligenti.am         N      1 1 ACC S F\ndiligentia, diligentiae  N (1st) F   [XXXBO]\ndiligence/care/attentiveness; economy/frugality/thrift; industry; love (Souter)","probaverimus":"probav.erimus        V      1 1 PERF ACTIVE  SUB 1 P\nprobav.erimus        V      1 1 FUTP ACTIVE  IND 1 P\nprobo, probare, probavi, probatus  V (1st) TRANS   [XXXAO]\napprove (of), esteem/commend/recommend/certify; give assent/approval/sanction;\nlet; show to be real/true; examine/test/try/prove/demonstrate; get accepted;","haec":"h.aec                PRON   3 1 NOM S F\nh.aec                PRON   3 1 NOM P N\nh.aec                PRON   3 1 ACC P N\nhic, haec, hoc  PRON   [XXXAX]\nthis; these (pl.); (also DEMONST);","quae":"qu.ae                PRON   1 0 NOM P F\n[XXXAO]\nwho; that; which, what; of which kind/degree; person/thing/time/point that;\nwho/what/which?, what/which one/man/person/thing? what kind/type of?;\nwho/whatever, everyone who, all that, anything that;\nany; anyone/anything, any such; unspecified some; (after si/sin/sive/ne);\nwho?, which?, what?; what kind of?;\nqu.ae                PRON   1 0 NOM S F\nwho; that; which, what; of which kind/degree; person/thing/time/point that;\nanyone/anybody/anything; whoever you pick; something (or other); any (NOM S);\nwho/whatever, everyone who, all that, anything that;\nany; anyone/anything, any such; unspecified some; (after si/sin/sive/ne);\nwho?, which?, what?; what kind of?;\nqu.ae                PRON   1 0 NOM P N\nqu.ae                PRON   1 0 ACC P N\nanyone/anybody/anything; whoever you pick; something (or other); any (NOM S);\nany; anyone/anything, any such; unspecified some; (after si/sin/sive/ne);","dixi":"dix.i                V      3 1 PERF ACTIVE  IND 1 S\ndico, dicere, dixi, dictus  V (3rd)   [XXXAO]\nsay, declare, state; allege, declare positively; assert; plead (case);\ntalk/speak; make speech; play (instrument); pronounce, articulate; utter; mean;\nname/call; appoint, fix/set (date); designate, declare intention of giving;","retinere":"retin.ere            V      2 1 PRES ACTIVE  INF 0 X\nretin.ere            V      2 1 PRES PASSIVE IND 2 S\nretin.ere            V      2 1 PRES PASSIVE IMP 2 S\nretineo, retinere, retinui, retentus  V (2nd)   [XXXAX]\nhold back, restrain; uphold; delay; hold fast; retain,preserve;","per":"per                  PREP   ACC\nper  PREP  ACC   [XXXAX]\nthrough (space); during (time); by, by means of;","populum":"popul.um             N      2 1 ACC S M\npopul.um             N      2 1 GEN P M                   uncommon\npopulus, populi  N (2nd) M   [XXXAO]\npeople, nation, State; public/populace/multitude/crowd; a following;\nmembers of a society/sex; region/district (L\u002BS); army (Bee);\npopul.um             N      2 1 ACC S F\npopul.um             N      2 1 GEN P F                   uncommon\npopulus, populi  N (2nd) F   [XAXCO]\npoplar tree; (long o);","Romanum":"roman.um             N      2 1 ACC S M\nroman.um             N      2 1 GEN P M                   uncommon\nromanus, romani  N (2nd) M   [XXXBX]\nRoman; the Romans (pl.);\nroman.um             ADJ    1 1 NOM S N POS\nroman.um             ADJ    1 1 VOC S N POS\nroman.um             ADJ    1 1 ACC S M POS\nroman.um             ADJ    1 1 ACC S N POS\nromanus, romana, romanum  ADJ   [XXXAX]\nRoman;","incolumia":"incolum.ia           ADJ    3 2 NOM P N POS\nincolum.ia           ADJ    3 2 VOC P N POS\nincolum.ia           ADJ    3 2 ACC P N POS\nincolumis, incolumis, incolume  ADJ   [XXXBX]\nunharmed, uninjured; alive, safe; unimpaired;","salva":"salv.a               ADJ    1 1 NOM S F POS\nsalv.a               ADJ    1 1 VOC S F POS\nsalv.a               ADJ    1 1 ABL S F POS\nsalv.a               ADJ    1 1 NOM P N POS\nsalv.a               ADJ    1 1 VOC P N POS\nsalv.a               ADJ    1 1 ACC P N POS\nsalvus, salva, salvum  ADJ   [XXXAX]\nwell, unharmed, sound; alive; safe, saved;\nsalv.a               V      1 1 PRES ACTIVE  IMP 2 S\nsalvo, salvare, salvavi, salvatus  V (1st)   [XXXBX]\nsave;","tantulum":"tantul.um            ADJ    1 1 NOM S N POS\ntantul.um            ADJ    1 1 VOC S N POS\ntantul.um            ADJ    1 1 ACC S M POS\ntantul.um            ADJ    1 1 ACC S N POS\ntantulus, tantula, tantulum  ADJ   [XXXDX]    lesser\nso very small, so trifling;","offensum":"offens.um            VPAR   3 1 NOM S N PERF PASSIVE PPL\noffens.um            VPAR   3 1 VOC S N PERF PASSIVE PPL\noffens.um            VPAR   3 1 ACC S M PERF PASSIVE PPL\noffens.um            VPAR   3 1 ACC S N PERF PASSIVE PPL\noffendo, offendere, offendi, offensus  V (3rd)   [XXXAO]\noffens.um            SUPINE 3 1 ACC S N\noffend, give offense (to); displease/annoy/vex; trouble/upset, hurt (feelings);\noffens.um            VPAR   3 1 NOM S N PERF PASSIVE PPL\noffens.um            VPAR   3 1 VOC S N PERF PASSIVE PPL\noffens.um            VPAR   3 1 ACC S M PERF PASSIVE PPL\noffens.um            VPAR   3 1 ACC S N PERF PASSIVE PPL\noffens.um            SUPINE 3 1 ACC S N\nstrike/knock against; bump into; stumble upon; check, stop short; spoil/harm;\noffens.um            VPAR   3 1 NOM S N PERF PASSIVE PPL\noffens.um            VPAR   3 1 VOC S N PERF PASSIVE PPL\noffens.um            VPAR   3 1 ACC S M PERF PASSIVE PPL\noffens.um            VPAR   3 1 ACC S N PERF PASSIVE PPL\noffens.um            SUPINE 3 1 ACC S N\ncome upon, meet, find, encounter, be faced with; run aground; violate/wrong;\noffens.um            N      1 1 GEN P F                   uncommon\noffensa, offensae  N (1st) F   [XXXDX]    lesser\noffense, displeasure; offense to a person\u0027s feelings, resentment;\noffens.um            N      2 2 NOM S N\noffens.um            N      2 2 VOC S N\noffens.um            N      2 2 ACC S N\noffens.um            N      2 2 GEN P N                   uncommon\noffensum, offensi  N (2nd) N   [XXXES]    uncommon\noffense;\noffens.um            N      4 1 ACC S M\noffens.um            N      4 1 GEN P M                   Classic   uncommon\noffensus, offensus  N (4th) M   [XXXDX]    lesser\ncollision, knock;\noffens.um            ADJ    1 1 NOM S N POS\noffens.um            ADJ    1 1 VOC S N POS\noffens.um            ADJ    1 1 ACC S M POS\noffens.um            ADJ    1 1 ACC S N POS\noffensus, offensa -um, offensior -or -us, offensissimus -a -um  ADJ   [XXXFS]    veryrare\noffensive, odious;","titubatumque":"que                  TACKON\n-que = and (enclitic, translated before attached word); completes plerus/uter;\ntitubat.um           VPAR   1 1 NOM S N PERF PASSIVE PPL\ntitubat.um           VPAR   1 1 VOC S N PERF PASSIVE PPL\ntitubat.um           VPAR   1 1 ACC S M PERF PASSIVE PPL\ntitubat.um           VPAR   1 1 ACC S N PERF PASSIVE PPL\ntitubo, titubare, titubavi, titubatus  V (1st)   [XXXDX]    lesser\ntitubat.um           SUPINE 1 1 ACC S N\nstagger, totter; falter;","ea":"e.a                  V      1 1 PRES ACTIVE  IMP 2 S\neo, eare, evi, etus  V (1st)   [FXXFZ]    Medieval  veryrare\ngo, walk; march, advance; pass; flow; pass (time); ride; be in the middle;\ne.a                  PRON   4 1 NOM S F\ne.a                  PRON   4 1 ABL S F\ne.a                  PRON   4 1 NOM P N\ne.a                  PRON   4 1 ACC P N\nis, ea, id  PRON   [XXXAX]\nhe/she/it/they (by GENDER/NUMBER); DEMONST: that, he/she/it, they/them;\ne.a                  PRON   4 2 NOM S F\ne.a                  PRON   4 2 ABL S F\ne.a                  PRON   4 2 NOM P N\ne.a                  PRON   4 2 ACC P N\nidem, eadem, idem  PRON   [XXXAX]\n(w/-dem ONLY, idem, eadem, idem) same, the same, the very same, also;","singillatim":"singillatim          ADV    POS\nsingillatim  ADV   [XXXCO]\none by one, singly, separately;","diu":"diu                  ADV    POS\ndiu  ADV   [XXXDO]    lesser\nby day; (usu. used w/noctu);\ndiu, diutius, diutissime  ADV   [XXXAO]\n(for) a long/considerable time/while; long since; [quam diu =\u003E as long as];\nstill further/longer (COMP); any longer/further/more (w/negative);","collecta":"collect.a            N      1 1 NOM S F\ncollect.a            N      1 1 VOC S F\ncollect.a            N      1 1 ABL S F\ncollecta, collectae  N (1st) F   [XXXFO]    veryrare\ncontribution; collection; meeting/assemblage (L\u002BS); Collect at Mass (eccl.);\ncollect.a            N      2 2 NOM P N\ncollect.a            N      2 2 VOC P N\ncollect.a            N      2 2 ACC P N\ncollectum, collecti  N (2nd) N   [XXXNO]    Pliny\nthat which is collected; (food); collected sayings/writings (pl.);\ncollect.a            ADJ    1 1 NOM S F POS\ncollect.a            ADJ    1 1 VOC S F POS\ncollect.a            ADJ    1 1 ABL S F POS\ncollect.a            ADJ    1 1 NOM P N POS\ncollect.a            ADJ    1 1 VOC P N POS\ncollect.a            ADJ    1 1 ACC P N POS\ncollectus, collecta -um, collectior -or -us, collectissimus -a -um  ADJ   [XXXEO]    uncommon\ncompact (of style), concise; restricted; contracted, narrow; shut (Ecc);\ncollect.a            VPAR   3 1 NOM S F PERF PASSIVE PPL\ncollect.a            VPAR   3 1 VOC S F PERF PASSIVE PPL\ncollect.a            VPAR   3 1 ABL S F PERF PASSIVE PPL\ncollect.a            VPAR   3 1 NOM P N PERF PASSIVE PPL\ncollect.a            VPAR   3 1 VOC P N PERF PASSIVE PPL\ncollect.a            VPAR   3 1 ACC P N PERF PASSIVE PPL\ncolligo, colligere, collegi, collectus  V (3rd) TRANS   [XXXAO]\ncollect, assemble, bring/gather/hold/keep together; combine; harvest; pick up;\nobtain/acquire, amass; rally; recover; sum up; deduce, infer; compute, add up;\ncolligo, colligere, collexi, collectus  V (3rd) TRANS   [XXXFO]    veryrare\ncollect, assemble, bring/gather/hold/keep together; combine; harvest; pick up;\nobtain/acquire, amass; rally; recover; sum up; deduce, infer; compute, add up;","sunt":"s.unt                V      5 1 PRES ACTIVE  IND 3 P\nsum, esse, fui, futurus  V   [XXXAX]\nbe; exist; (also used to form verb perfect passive tenses) with NOM PERF PPL","uno":"un.o                 NUM    1 1 ABL S M CARD\nun.o                 NUM    1 1 ABL S N CARD\nunus -a -um, primus -a -um, singuli -ae -a, semel  NUM   [XXXAX]\n1 - (CARD answers \u0027how many\u0027);\nun.o                 ADJ    1 3 DAT S X POS               infreq\nun.o                 ADJ    1 3 ABL S M POS\nun.o                 ADJ    1 3 ABL S N POS\nunus, una, unum (gen -ius)  ADJ   [XXXEO]    uncommon\nalone, a single/sole; some, some one; only (pl.); one set of (denoting entity);","tempore":"tempor.e             N      3 2 LOC S N\ntempor.e             N      3 2 DAT S N                   Early\ntempor.e             N      3 2 ABL S N\ntempus, temporis  N (3rd) N   [XXXAX]\ntime, condition, right time; season, occasion; necessity;","universa":"univers.a            ADJ    1 1 NOM S F POS\nunivers.a            ADJ    1 1 VOC S F POS\nunivers.a            ADJ    1 1 ABL S F POS\nunivers.a            ADJ    1 1 NOM P N POS\nunivers.a            ADJ    1 1 VOC P N POS\nunivers.a            ADJ    1 1 ACC P N POS\nuniversus, universa, universum  ADJ   [XXXAX]\nwhole, entire; all together; all; universal;","perdamus":"perd.amus            V      3 1 PRES ACTIVE  SUB 1 P\nperdo, perdere, perdidi, perditus  V (3rd)   [XXXAX]\nruin, destroy; lose; waste;","quapropter":"quapropter           ADV    POS\nquapropter  ADV   [XXXBX]\nwherefore, why, for what?;","vestrum":"vestr.um             PRON   5 3 GEN P C\n[XXXBO]\nyou (pl.), ye;\nvestr.um             ADJ    1 2 NOM S N POS\nvestr.um             ADJ    1 2 VOC S N POS\nvestr.um             ADJ    1 2 ACC S M POS\nvestr.um             ADJ    1 2 ACC S N POS\nvester, vestra, vestrum  ADJ   [XXXBO]\nyour (pl.), of/belonging to/associated with you;","est":"es.t                 V      7 3 PRES ACTIVE  IND 3 S      Early\nedo, esse, -, -  V TRANS   [XXXCO]\neat/consume/devour; eat away (fire/water/disease); destroy; spend money on food\n.est                 V      5 1 PRES ACTIVE  IND 3 S\nsum, esse, fui, futurus  V   [XXXAX]\nbe; exist; (also used to form verb perfect passive tenses) with NOM PERF PPL","deligere":"delig.ere            V      3 1 PRES ACTIVE  INF 0 X\ndelig.ere            V      3 1 PRES PASSIVE IND 2 S      Early     uncommon\ndelig.ere            V      3 1 PRES PASSIVE IMP 2 S\ndelig.ere            V      3 1 FUT  PASSIVE IND 2 S\ndeligo, deligere, delegi, delectus  V (3rd) TRANS   [XXXBO]\npick/pluck off, cull; choose, select,  levy (soldiers), enroll; conduct a levy;\ndelig.ere            V      1 1 PRES PASSIVE SUB 2 S\ndeligo, deligare, deligavi, deligatus  V (1st) TRANS   [XXXCO]\nbind fast, tie (up), fasten; make fast by tying; bandage; tie (bandage);","existimetis":"existim.etis         V      1 1 PRES ACTIVE  SUB 2 P\nexistimo, existimare, existimavi, existimatus  V (1st) TRANS   [XXXBO]\nvalue/esteem; form/hold opinion/view; think/suppose; estimate; judge/consider;","facillime":"facilli.me           ADJ    3 2 VOC S M SUPER\nfacilis, facile, facilior -or -us, facillimus -a -um  ADJ   [XXXAX]\neasy, easy to do, without difficulty, ready, quick, good natured, courteous;\nfacillime            ADV    SUPER\nfacile, facilius, facillime  ADV   [XXXBO]\neasily, readily, without difficulty; generally, often; willingly; heedlessly;","posse":"poss.e               V      5 2 PRES ACTIVE  INF 0 X\npossum, posse, potui, -  V   [XXXAX]\nbe able, can; [multum  posse =\u003E have much/more/most influence/power];","magnitudinem":"magnitudin.em        N      3 1 ACC S F\nmagnitudo, magnitudinis  N (3rd) F   [XXXAX]\nsize, magnitude, bulk; greatness. importance, intensity;","causae":"caus.ae              N      1 1 GEN S F\ncaus.ae              N      1 1 LOC S F\ncaus.ae              N      1 1 DAT S F\ncaus.ae              N      1 1 NOM P F\ncaus.ae              N      1 1 VOC P F\ncausa, causae  N (1st) F   [XXXAO]\ncause/reason/motive; origin, source, derivation; responsibility/blame; symptom;\noccasion, subject; plea, position; lawsuit, case, trial; proviso/stipulation;\nthing(s); [sine causa =\u003E in vain (Vulgate)];","iudici":"iudic.i              N      3 1 LOC S M                   Early\niudic.i              N      3 1 DAT S M\njudex, judicis  N (3rd) M   [XLXAX]\njudge; juror;\niudici               N      2 4 GEN S N                   Early\njudicium, judici(i)  N (2nd) N   [XLXAO]\ntrial, legal action/process; court/tribunal; courts; administration of justice;\njudgment/sentence/verdict; judging; jurisdiction/authority; opinion/belief;","sustinere":"sustin.ere           V      2 1 PRES ACTIVE  INF 0 X\nsustin.ere           V      2 1 PRES PASSIVE IND 2 S\nsustin.ere           V      2 1 PRES PASSIVE IMP 2 S\nsustineo, sustinere, sustinui, sustentus  V (2nd)   [XXXAX]\nsupport; check; put off; put up with; sustain; hold back;","fide":"fid.e                N      5 1 GEN S F                   Early\nfid.e                N      5 1 DAT S F                   Early     uncommon\nfid.e                N      5 1 ABL S F\nfides, fidei  N (5th) F   [XXXAX]\nfaith, loyalty; honesty; credit; confidence, trust, belief; good faith;\nfid.e                ADJ    1 1 VOC S M POS\nfidus, fida, fidum  ADJ   [XXXBX]\nfaithful, loyal; trusting, confident;\nfid.e                V      3 1 PRES ACTIVE  IMP 2 S\nfido, fidere, fisus sum  V (3rd) SEMIDEP   [XXXDX]    lesser\ntrust (in), have confidence (in) (w/DAT or ABL);\nfid.e                N      3 3 LOC S F\nfid.e                N      3 3 DAT S F                   Early\nfid.e                N      3 3 ABL S F\nfides, fidis  N (3rd) F   [XXXBO]\nfidis, fidis  N (3rd) F   [XXXBO]\nchord, instrument string; constellation Lyra; stringed instrument (pl.); lyre;\ne                    SUFFIX\n-ly; -ily;  Converting ADJ to ADV\nfid.e                ADV    POS\nfidus, fida, fidum  ADJ   [XXXBX]\nfaithful, loyal; trusting, confident;","diligentia":"dilig.entia          VPAR   3 1 NOM P N PRES ACTIVE  PPL\ndilig.entia          VPAR   3 1 VOC P N PRES ACTIVE  PPL\ndilig.entia          VPAR   3 1 ACC P N PRES ACTIVE  PPL\ndiligo, diligere, dilexi, dilectus  V (3rd) TRANS   [XXXBO]\nlove, hold dear; value/esteem/favor; have special regard for; (milder than amo)\ndiligent.ia          ADJ    3 1 NOM P N POS\ndiligent.ia          ADJ    3 1 VOC P N POS\ndiligent.ia          ADJ    3 1 ACC P N POS\ndiligens, diligentis (gen.), diligentior -or -us, diligentissimus -a -um  ADJ   [XXXBO]\ncareful; diligent, scrupulous; accurate; industrious; assiduous;\nthrifty, economical, frugal; attentive, fond (of), devoted (to);\ndiligenti.a          N      1 1 NOM S F\ndiligenti.a          N      1 1 VOC S F\ndiligenti.a          N      1 1 ABL S F\ndiligentia, diligentiae  N (1st) F   [XXXBO]\ndiligence/care/attentiveness; economy/frugality/thrift; industry; love (Souter)","consilio":"consili.o            N      2 4 DAT S N\nconsili.o            N      2 4 ABL S N\nconsilium, consili(i)  N (2nd) N   [XXXAO]\ndebate/discussion/deliberation/consultation; advice/counsel/suggestion; adviser\ndecision/resolution; intention/purpose/policy/plan/action; diplomacy/strategy;\ndeliberative/advisory body; state council, senate; jury; board of assessors;\nintelligence, sense, capacity for judgment/invention; mental ability; choice;\n*","auctoritate":"auctoritat.e         N      3 1 LOC S F\nauctoritat.e         N      3 1 DAT S F                   Early\nauctoritat.e         N      3 1 ABL S F\nauctoritas, auctoritatis  N (3rd) F   [XLXAO]\ntitle (legal), ownership; right to authorize/sanction, power; decree, order;\nauthority, influence; responsibility; prestige, reputation; opinion, judgment;","vos":"v.os                 PRON   5 3 NOM P C\nv.os                 PRON   5 3 VOC P C\nv.os                 PRON   5 3 ACC P C\n[XXXBO]\nyou (pl.), ye;","mihi":"m.ihi                PRON   5 1 DAT S C\n[XXXAX]\nI, me (PERS); myself (REFLEX);","anteposueritis":"anteposu.eritis      V      3 1 PERF ACTIVE  SUB 2 P\nanteposu.eritis      V      3 1 FUTP ACTIVE  IND 2 P\nantepono, anteponere, anteposui, antepositus  V (3rd) TRANS   [XXXBO]\nset before (w/DAT), place/station before, serve (food); prefer, value above;","ego":"ego                  PRON   5 1 NOM S C\n[XXXAX]\nI, me (PERS); myself (REFLEX);","me":"m.e                  PRON   5 1 ABL S C\nm.e                  PRON   5 1 ACC S C\n[XXXAX]\nI, me (PERS); myself (REFLEX);\n*","dignitate":"dignitat.e           N      3 1 LOC S F\ndignitat.e           N      3 1 DAT S F                   Early\ndignitat.e           N      3 1 ABL S F\ndignitas, dignitatis  N (3rd) F   [XXXBO]\nworth, excellence; fitness/suitability (for task),; honor, esteem, standing;\nrank/status; merit; dignity; position/authority/office; dignitaries (pl.);","superatum":"superat.um           VPAR   1 1 NOM S N PERF PASSIVE PPL\nsuperat.um           VPAR   1 1 VOC S N PERF PASSIVE PPL\nsuperat.um           VPAR   1 1 ACC S M PERF PASSIVE PPL\nsuperat.um           VPAR   1 1 ACC S N PERF PASSIVE PPL\nsupero, superare, superavi, superatus  V (1st)   [XXXAX]\nsuperat.um           SUPINE 1 1 ACC S N\novercome, conquer; survive; outdo; surpass, be above, have the upper hand;","arbitrabor":"arbitr.abor          V      1 1 FUT  PASSIVE IND 1 S\narbitro, arbitrare, arbitravi, arbitratus  V (1st)   [XLXCO]\nthink, judge; consider; be settled/decided on (PASS);\narbitror, arbitrari, arbitratus sum  V (1st) DEP   [XLXBO]\nobserve, witness; testify; decide, judge, sentence; believe, think, imagine;","ne":"n.e                  V      2 1 PRES ACTIVE  IMP 2 S\nneo, nere, nevi, netus  V (2nd)   [XXXDX]    lesser\nspin; weave; produce by spinning;\nne                   ADV    POS\nne  ADV   [XXXAX]\nnot; (intro clause of purpose with subj verb); [ne....quidem =\u003E not even];\ntruly, indeed, verily, assuredly; (particle of assurance); (w/personal PRON);\nne                   CONJ\nne  CONJ   [XXXAX]\nthat not, lest; (for negative of IMP);","tam":"tam                  ADV    POS\ntam  ADV   [XXXAX]\nso, so much (as); to such an extent/degree; nevertheless, all the same;","honestam":"honest.am            ADJ    1 1 ACC S F POS\nhonestus, honesta -um, honestior -or -us, honestissimus -a -um  ADJ   [XXXAX]\ndistinguished, reputable, respected, honorable, upright, honest; worthy;","severam":"sev.eram             V      3 1 PLUP ACTIVE  IND 1 S\nsero, serere, sevi, satus  V (3rd)   [XXXDX]    lesser\nsow, plant; strew, scatter, spread; cultivate; beget, bring forth;\nsever.am             ADJ    1 1 ACC S F POS\nseverus, severa -um, severior -or -us, severissimus -a -um  ADJ   [XXXBX]\nstern, strict, severe; grave, austere; weighty, serious; unadorned, plain;","diligentemque":"que                  TACKON\n-que = and (enclitic, translated before attached word); completes plerus/uter;\ndilig.entem          VPAR   3 1 ACC S C PRES ACTIVE  PPL\ndiligo, diligere, dilexi, dilectus  V (3rd) TRANS   [XXXBO]\nlove, hold dear; value/esteem/favor; have special regard for; (milder than amo)\ndiligent.em          ADJ    3 1 ACC S C POS\ndiligens, diligentis (gen.), diligentior -or -us, diligentissimus -a -um  ADJ   [XXXBO]\ncareful; diligent, scrupulous; accurate; industrious; assiduous;\nthrifty, economical, frugal; attentive, fond (of), devoted (to);","accusationem":"accusation.em        N      3 1 ACC S F\naccusatio, accusationis  N (3rd) F   [XLXBO]\naccusation, inditement; act/occasion of accusation; rebuke, reproof;","vobis":"v.obis               PRON   5 3 DAT P C\nv.obis               PRON   5 3 ABL P C\n[XXXBO]\nyou (pl.), ye;","placuisse":"placu.isse           V      2 1 PERF ACTIVE  INF 0 X\nplaceo, placere, placui, placitus  V (2nd) DAT   [XXXAX]\nplease, satisfy, give pleasure to (with dat.);","ordini":"ordin.i              N      3 1 LOC S M                   Early\nordin.i              N      3 1 DAT S M\nordo, ordinis  N (3rd) M   [XXXAX]\nrow, order/rank; succession; series; class; bank (oars); order (of monks) (Bee)","vestro":"vestr.o              ADJ    1 2 DAT S M POS\nvestr.o              ADJ    1 2 DAT S N POS\nvestr.o              ADJ    1 2 ABL S M POS\nvestr.o              ADJ    1 2 ABL S N POS\nvester, vestra, vestrum  ADJ   [XXXBO]\nyour (pl.), of/belonging to/associated with you;","placere":"plac.ere             V      1 1 PRES PASSIVE SUB 2 S\nplaco, placare, placavi, placatus  V (1st)   [XXXBX]\nappease; placate; reconcile;\nplac.ere             V      2 1 PRES ACTIVE  INF 0 X\nplac.ere             V      2 1 PRES PASSIVE IND 2 S\nplac.ere             V      2 1 PRES PASSIVE IMP 2 S\nplaceo, placere, placui, placitus  V (2nd) DAT   [XXXAX]\nplease, satisfy, give pleasure to (with dat.);\n*","arbitretur":"arbitr.etur          V      1 1 PRES PASSIVE SUB 3 S\narbitro, arbitrare, arbitravi, arbitratus  V (1st)   [XLXCO]\nthink, judge; consider; be settled/decided on (PASS);\narbitror, arbitrari, arbitratus sum  V (1st) DEP   [XLXBO]\nobserve, witness; testify; decide, judge, sentence; believe, think, imagine;","providete":"provid.ete           V      2 1 PRES ACTIVE  IMP 2 P\nprovideo, providere, providi, provisus  V (2nd)   [XXXBX]\nforesee; provide for, make provision; with DAT;"};
+        </script>
+
+        <script>
+            function dict(word) {
+                var lines = dictionary[word].split('\n');
+                var buffer = [];
+                var semiColon = false;
+
+                for(let line of lines) {
+                    line = line.trim();
+                    if (line.includes(';')) {
+                        semiColon = true;
+                    } else {
+                        if (semiColon) {
+                            buffer.push('');
+                        }
+
+                        semiColon = false;
+                    }
+
+                    buffer.push(line);
+                }
+
+                document.getElementById('dictcontent').innerHTML = buffer.join('\n');
+                document.getElementById('dictword').innerHTML = word;
+                document.getElementById('dictwindow').style.display = 'block';
+            }
+
+            function close_dict() {
+                document.getElementById('dictwindow').style.display = 'none';
+            }
+
+            function open_github() {
+                window.open('https://bolner.github.io/rainbow-latin-reader', '_blank').focus();
+            }
+
+            function topbar_click() {
+                var element = document.getElementById('maintable');
+                element.classList.toggle('colored');
+            }
+        </script>
+    </body>
+</html>
