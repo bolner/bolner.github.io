@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html>
+    <!--
+        Copyright 2024 Tamas Bolner
+
+        Licensed under the Apache License, Version 2.0 (the "License");
+        you may not use this file except in compliance with the License.
+        You may obtain a copy of the License at
+
+            http://www.apache.org/licenses/LICENSE-2.0
+
+        Unless required by applicable law or agreed to in writing, software
+        distributed under the License is distributed on an "AS IS" BASIS,
+        WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        See the License for the specific language governing permissions and
+        limitations under the License.
+    -->
+    <head>
+        <meta charset="UTF-8">
+        <title>Vespasian (Suetonius)</title>
+
+        <style>
+            :root {
+			  --link-color: rgb(127, 161, 171);
+			}
+
+            html {
+                scroll-padding-top: 3em;
+            }
+
+            body {
+                margin: 0;
+                margin-top: 2.5em;
+                margin-bottom: 2em;
+                padding: 0;
+                padding-right: 0.7em;
+                font-size: calc(1vw + 0.3em);
+                color: rgb(197, 203, 211);
+                background-color: rgb(10, 17, 27);
+            }
+
+            table.section {
+                border-collapse: collapse;
+                border: 0;
+                padding: 0;
+                margin: 0;
+            }
+
+            table.section tr {
+                border: 0;
+                padding: 0;
+                margin: 0;
+            }
+
+            table.section td.margin {
+                width: 3.5em;
+                border: 0;
+                padding: 0.5em;
+                padding-top: 0.7em;
+                vertical-align: top;
+                text-align: right;
+            }
+
+            table.section td.latin {
+                width: 50em;
+                background-color: rgb(0, 0, 0);
+                border: 0;
+                padding: 0.5em;
+                vertical-align: top;
+            }
+
+            table.section td.english {
+                width: 50em;
+                background-color: rgb(13, 34, 53);
+                border: 0;
+                padding: 0.5em;
+                vertical-align: top;
+            }
+
+            table.section td.title {
+                background-color: black;
+                border: 0;
+                padding: 0.5em;
+                padding-top: 0em;
+            }
+
+            table.section td.margin a {
+                color: var(--link-color);
+                text-decoration: underline;
+            }
+
+            table.section td.margin a:hover {
+                color: white;
+            }
+
+            table.section td.title div.author {
+                float: right;
+            }
+
+            table.section td.english div.translator {
+                float: right;
+                margin-top: 2.5em;
+            }
+
+            h1, h2 {
+                background-color: transparent;
+            }
+
+            td.title h2 {
+                margin-bottom: 0;
+            }
+
+            div.word {
+                display: inline;
+                background-color: transparent;
+                line-height: 1.5em;
+                padding: 0.1em;
+                margin-left: -0.2em;
+            }
+
+            /*
+				Naviagation
+			*/
+			div.navigation {
+				padding: 0.6em;
+				text-align: center
+			}
+			
+			div.navigation a {
+				color: var(--link-color);
+                text-decoration: underline;
+				padding-left: 0.3em;
+				padding-right: 0.3em;
+			}
+			
+			div.navigation a:hover {
+				color: white;
+                text-decoration: underline;
+			}
+
+            div.navigation div.current-page {
+                display: inline;
+                background-color: #134061;
+                padding-right: 0.4em;
+                padding-left: 0.4em;
+            }
+
+            /*
+                Top bar
+            */
+            .topbar {
+                white-space: nowrap;
+				overflow: hidden;
+                background-color: rgb(13, 24, 40);
+                position: fixed;
+                top: 0;
+                width: 100%;
+                padding: 0.4em;
+                padding-top: 0.1em;
+
+                border-bottom: 0.1em;
+                border-bottom-color: rgb(60, 87, 126);
+                border-bottom-style: solid;
+            }
+
+            .topbar div.rainbow {
+                background: linear-gradient(in hsl longer hue 45deg, red 0 0);
+                text-shadow: 0.15em 0.15em 0.2em #000, -0.15em -0.15em 0.2em #000, 0.15em -0.15em 0.2em #000, -0.15em 0.15em 0.2em #000;
+                position: absolute;
+				right: 0;
+                margin-right: 1em;
+                padding-left: 1em;
+                padding-right: 1em;
+            }
+
+            .topbar div.rainbow:hover {
+                cursor: pointer;
+                background: linear-gradient(in hsl longer hue 125deg, red 0 0);
+            }
+
+            .topbar div.word.sample {
+                font-size: 0.9em;
+                padding-left: 0.2em;
+                padding-right: 0.2em;
+                cursor: pointer;
+            }
+
+            .topbar div.word.title {
+                margin-left: 0.5em;
+            }
+
+            /*
+                Cases
+            */
+            .colored div.nom { /* Nominative */
+                background-color: rgb(4 57 4);
+            }
+
+            .colored div.acc { /* Accusative */
+                background-color: rgb(255, 155, 0);
+                color: black;
+            }
+
+            .colored div.gen { /* Genitive */
+                background-color: rgb(112 0 0);
+            }
+
+            .colored div.dat { /* Dative */
+                background-color: rgb(26 41 141);
+            }
+
+            .colored div.abl { /* Ablative */
+                background-color: rgb(85, 0, 116);
+                color: white;
+            }
+
+            .colored div.voc { /* Vocative */
+                background-color: rgb(237, 237, 145);
+                color: black;
+            }
+
+            .colored div.loc { /* Locative */
+                background-color: rgb(144, 220, 219);
+                color: black;
+            }
+
+            .colored div.pas { /* Voice = Passive */
+                text-decoration: underline;
+                text-underline-offset: 0.2em;
+            }
+
+            .colored div.dep { /* Voice = Deponent */
+                text-decoration: underline;
+                text-decoration-style: dashed;
+                text-underline-offset: 0.2em;
+            }
+
+            div.grey {
+                background-color: rgb(83 83 83);
+            }
+
+            div.ck:hover {
+                cursor: pointer;
+                background-color: #00776b;
+                color: white;
+            }
+
+            /*
+				Footer
+			*/
+			div.footer {
+				text-align: center;
+				font-size: 0.86em;
+				padding-top: 0.4em;
+			}
+			
+			div.footer a, div.footer a:visited {
+				color: var(--link-color);
+			}
+			
+			div.footer a:hover {
+				color: white;
+			}
+
+            /*
+                Dictionary
+            */
+            div#dictwindow {
+                display: none;
+            }
+
+            div.dictionary {
+                background-color: #19424b;
+                position: fixed;
+                left: 53vw;
+                width: 45vw;
+                top: 15%;
+                height: 70%;
+                overflow-y: scroll;
+                
+                padding: 0px;
+                box-shadow: 0.1em 0.1em 0.8em 0.8em black;
+
+                border:1px solid white;
+            }
+
+            div.dictionary div.content {
+                padding: 1em;
+                padding-top: 4.2em;
+                font-size: 0.74em;
+                font-family: monospace;
+                white-space: pre-wrap;
+            }
+
+            div.dictionary div.control {
+                position: fixed;
+                background-color: #061827;
+                padding: 0.5em;
+            }
+
+            div.dictionary div.control:hover {
+                cursor: pointer;
+                background-color: #5fabea;
+                color: rgb(0, 0, 0);
+            }
+
+            div.dictionary div#dictword {
+                position: fixed;
+                background-color: #09281b;
+                padding: 0.5em;
+                right: 2vw;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="topbar colored">
+            <div class="word sample nom" onclick="topbar_click()">Nominative</div>
+            <div class="word sample acc" onclick="topbar_click()">Accusative</div>
+            <div class="word sample dat" onclick="topbar_click()">Dative</div>
+            <div class="word sample abl" onclick="topbar_click()">Ablative</div>
+            <div class="word sample gen" onclick="topbar_click()">Genitive</div>
+            <div class="word sample voc" onclick="topbar_click()">Vocative</div>
+            <div class="word sample loc" onclick="topbar_click()">Locative</div>
+            <div class="word sample pas grey" onclick="topbar_click()">Passive</div>
+            <div class="word sample dep grey" onclick="topbar_click()">Deponent</div>
+
+            <div class="word title">Vespasian (Suetonius)</div>
+
+            <div class="word rainbow" onclick="open_github()">Rainbow Latin Reader</div>
+        </div>
+
+        <div class="navigation">
+            <a href="index.html">Index</a>
+                        <a href="phi1348.abo020_1.html">1 - 12</a>
+                        <a href="phi1348.abo020_2.html">13 - 24</a>
+                        <div class="current-page">25</div>
+        </div>
+
+        <div class="dictionary" id="dictwindow">
+            <div class="control" onclick="close_dict()">[Close]</div>
+            <div id="dictword"></div>
+            <div class="content" id="dictcontent"></div>
+        </div>
+
+        <table id="maintable" class="section colored">
+            <tr>
+                <td class="margin">&nbsp;</td>
+
+                <td class="title">
+                    <h2>Vespasian</h2>
+                    <div class="author"><i>Author: Suetonius</i></div>
+                </td>
+
+                <td class="english">
+                        <div class="translator"><i>Translator: Alexander Thomson</i></div>
+                </td>
+            </tr>
+
+            <tr id="s25">
+                <td class="margin"><a href="#s25">25</a></td>
+
+                <td class="latin">
+                    <div class="ck word" onclick="dict('Conuenit')">Conuenit</div> <div class="ck word" onclick="dict('inter')">inter</div> <div class="ck word acc" onclick="dict('omnis')">omnis</div>, <div class="ck word" onclick="dict('tam')">tam</div> <div class="ck word acc" onclick="dict('certum')">certum</div> <div class="ck word acc" onclick="dict('eum')">eum</div> <div class="ck word" onclick="dict('de')">de</div> <div class="ck word abl" onclick="dict('sua')">sua</div> <div class="ck word gen" onclick="dict('suorumque')">suorumque</div> <div class="ck word abl" onclick="dict('genitura')">genitura</div> <div class="ck word" onclick="dict('semper')">semper</div> <div class="ck word" onclick="dict('fuisse')">fuisse</div>, <div class="ck word" onclick="dict('ut')">ut</div> <div class="ck word" onclick="dict('post')">post</div> <div class="ck word acc" onclick="dict('assiduas')">assiduas</div> <div class="ck word" onclick="dict('in')">in</div> <div class="ck word acc" onclick="dict('se')">se</div> <div class="ck word acc" onclick="dict('coniurationes')">coniurationes</div> <div class="ck word nom" onclick="dict('ausus')">ausus</div> <div class="ck word" onclick="dict('sit')">sit</div> <div class="ck word" onclick="dict('adfirmare')">adfirmare</div> <div class="ck word dat" onclick="dict('senatui')">senatui</div> <div class="ck word" onclick="dict('aut')">aut</div> <div class="ck word acc" onclick="dict('filios')">filios</div> <div class="ck word dat" onclick="dict('sibi')">sibi</div> <div class="ck word acc" onclick="dict('successuros')">successuros</div> <div class="ck word" onclick="dict('aut')">aut</div> <div class="ck word acc" onclick="dict('neminem')">neminem</div>. <div class="ck word pas" onclick="dict('dicitur')">dicitur</div> <div class="ck word" onclick="dict('etiam')">etiam</div> <div class="ck word" onclick="dict('uidisse')">uidisse</div> <div class="ck word" onclick="dict('quondam')">quondam</div> <div class="ck word" onclick="dict('per')">per</div> <div class="ck word acc" onclick="dict('quietem')">quietem</div> <div class="ck word acc" onclick="dict('stateram')">stateram</div> <div class="ck word abl" onclick="dict('media')">media</div> <div class="ck word abl" onclick="dict('parte')">parte</div> <div class="ck word gen" onclick="dict('uestibuli')">uestibuli</div> <div class="ck word gen" onclick="dict('Palatinae')">Palatinae</div> <div class="ck word gen" onclick="dict('domus')">domus</div> <div class="ck word acc" onclick="dict('positam')">positam</div> <div class="ck word abl" onclick="dict('examine')">examine</div> <div class="ck word abl" onclick="dict('aequo')">aequo</div>, <div class="ck word" onclick="dict('cum')">cum</div> <div class="ck word" onclick="dict('in')">in</div> <div class="ck word abl" onclick="dict('altera')">altera</div> <div class="ck word abl" onclick="dict('lance')">lance</div> <div class="ck word nom" onclick="dict('Claudius')">Claudius</div> <div class="ck word" onclick="dict('et')">et</div> <div class="ck word nom" onclick="dict('Nero')">Nero</div> <div class="ck word" onclick="dict('starent')">starent</div>, <div class="ck word" onclick="dict('in')">in</div> <div class="ck word abl" onclick="dict('altera')">altera</div> <div class="ck word nom" onclick="dict('ipse')">ipse</div> <div class="ck word" onclick="dict('ac')">ac</div> <div class="ck word nom" onclick="dict('filii')">filii</div>. <div class="ck word" onclick="dict('nec')">nec</div> <div class="ck word nom" onclick="dict('res')">res</div> <div class="ck word" onclick="dict('fefellit')">fefellit</div>, <div class="ck word" onclick="dict('quando')">quando</div> <div class="ck word" onclick="dict('totidem')">totidem</div> <div class="ck word abl" onclick="dict('annis')">annis</div> <div class="ck word abl" onclick="dict('parique')">parique</div> <div class="ck word gen" onclick="dict('temporis')">temporis</div> <div class="ck word abl" onclick="dict('spatio')">spatio</div> <div class="ck word nom" onclick="dict('utrique')">utrique</div> <div class="ck word" onclick="dict('imperauerunt')">imperauerunt</div>.
+                </td>
+
+                <td class="english">
+                    All are agreed that he had such confidence in the calculations of his own nativity and that of his sons, that, after several conspiracies against him, he told the senate, that either his sons would succeed him, or nobody. It is said likewise, that he once saw in a dream a balance in the middle of the porch of the Palatine house exactly poised; in one scale of which stood Claudius and Nero, and in the other, himself and his sons. The event corresponded to the symbol; for the reigns of the two parties were precisely of the same duration.
+                </td>
+            </tr>
+        </table>
+
+        <div class="navigation">
+            <a href="index.html">Index</a>
+                        <a href="phi1348.abo020_1.html">1 - 12</a>
+                        <a href="phi1348.abo020_2.html">13 - 24</a>
+                        <div class="current-page">25</div>
+        </div>
+
+        <div class="footer">
+			<b>Rainbow Latin Reader</b> by <a href="https://github.com/bolner" target="_blank">Tamas Bolner</a>. Based on 3 projects:
+			<a href="https://github.com/PerseusDL/canonical-latinLit" target="_blank">Perseus canonical Latin literature</a>,
+			<a href="https://github.com/lascivaroma/latin-lemmatized-texts" target="_blank">Lemmatized Latin texts by Thibault Clérice et al.</a>
+			and <a href="https://mk270.github.io/whitakers-words/dictionary.html" target="_blank">Whitaker's Words</a>.
+            <br>
+            Generated on 2024-12-28
+		</div>
+
+        <script>
+            var dictionary = {"Conuenit":"conuen.it            V      4 1 PRES ACTIVE  IND 3 S\nconuen.it            V      4 1 PERF ACTIVE  IND 3 S\nconvenio, convenire, conveni, conventus  V (4th)   [XXXAO]\nbe appropriate to, fit, be correctly shaped/consistent; harmonize, agree, tally\nmeet/assemble; go to meet; come together; (have sex); converge; visit/approach;\nresort to; sue, prosecute, take legal action; be agreed upon/arranged (PASS);\nconvenit, convenire, convenit, conventus est  V (4th) IMPERS   [XXXCO]\nit agrees/came together/is agreed/asserted; [bene ~ nobis=\u003Ewe\u0027re on good terms]","inter":"inter                PREP   ACC\ninter  PREP  ACC   [XXXAX]\nbetween, among; during; [inter se =\u003E to each other, mutually];","omnis":"omn.is               ADJ    3 2 NOM S C POS\nomn.is               ADJ    3 2 VOC S C POS\nomn.is               ADJ    3 2 GEN S X POS\nomn.is               ADJ    3 2 ACC P C POS\nomnis, omnis, omne  ADJ   [XXXAC]\neach, every, every one (of a number); all (pl.); all/the whole of;\nomn.is               N      3 4 GEN S N\nomne, omnis  N (3rd) N   [XXXCC]\nall things (pl.); everything; a/the whole, entity, unit;\nomnis                N      3 3 NOM S C\nomnis                N      3 3 VOC S C\nomn.is               N      3 3 GEN S C\nomn.is               N      3 3 NOM P C                   Early     uncommon\nomn.is               N      3 3 ACC P C                   Early\nomnis, omnis  N (3rd) C   [XXXBC]\nall men (pl.), all persons;","tam":"tam                  ADV    POS\ntam  ADV   [XXXAX]\nso, so much (as); to such an extent/degree; nevertheless, all the same;","certum":"cert.um              N      2 2 NOM S N\ncert.um              N      2 2 VOC S N\ncert.um              N      2 2 ACC S N\ncert.um              N      2 2 GEN P N                   uncommon\ncertum, certi  N (2nd) N   [XXXBO]\nthat which is fixed/regular/definite/specified/certain/fact/reliable/settled;\ncert.um              ADJ    1 1 NOM S N POS\ncert.um              ADJ    1 1 VOC S N POS\ncert.um              ADJ    1 1 ACC S M POS\ncert.um              ADJ    1 1 ACC S N POS\ncertus, certa -um, certior -or -us, certissimus -a -um  ADJ   [XXXAO]\nfixed, settled, firm; certain; trusty/reliable; sure; resolved, determined;","eum":"e.um                 PRON   4 1 ACC S M\nis, ea, id  PRON   [XXXAX]\nhe/she/it/they (by GENDER/NUMBER); DEMONST: that, he/she/it, they/them;","de":"de                   PREP   ABL\nde  PREP  ABL   [XXXAO]\ndown/away from, from, off; about, of, concerning; according to; with regard to;","sua":"su.a                 N      2 2 NOM P N\nsu.a                 N      2 2 VOC P N\nsu.a                 N      2 2 ACC P N\nsuum, sui  N (2nd) N   [XXXDX]    lesser\nhis property (pl.); [se suaque =\u003E themselves and their possessions];\nsu.a                 ADJ    1 1 NOM S F POS\nsu.a                 ADJ    1 1 VOC S F POS\nsu.a                 ADJ    1 1 ABL S F POS\nsu.a                 ADJ    1 1 NOM P N POS\nsu.a                 ADJ    1 1 VOC P N POS\nsu.a                 ADJ    1 1 ACC P N POS\nsuus, sua, suum  ADJ   [XXXDX]    lesser\nhis/one\u0027s (own), her (own), hers, its (own); (pl.) their (own), theirs;","suorumque":"que                  TACKON\n-que = and (enclitic, translated before attached word); completes plerus/uter;\nsu.orum              N      2 1 GEN P M\nsuus, sui  N (2nd) M   [XXXDX]    lesser\nhis men (pl.), his friends;\nsu.orum              N      2 2 GEN P N\nsuum, sui  N (2nd) N   [XXXDX]    lesser\nhis property (pl.); [se suaque =\u003E themselves and their possessions];\nsu.orum              ADJ    1 1 GEN P M POS\nsu.orum              ADJ    1 1 GEN P N POS\nsuus, sua, suum  ADJ   [XXXDX]    lesser\nhis/one\u0027s (own), her (own), hers, its (own); (pl.) their (own), theirs;","genitura":"genit.ura            VPAR   3 1 NOM S F FUT  ACTIVE  PPL\ngenit.ura            VPAR   3 1 VOC S F FUT  ACTIVE  PPL\ngenit.ura            VPAR   3 1 ABL S F FUT  ACTIVE  PPL\ngenit.ura            VPAR   3 1 NOM P N FUT  ACTIVE  PPL\ngenit.ura            VPAR   3 1 VOC P N FUT  ACTIVE  PPL\ngenit.ura            VPAR   3 1 ACC P N FUT  ACTIVE  PPL\ngigno, gignere, genui, genitus  V (3rd)   [XXXAX]\ngive birth to, bring forth, bear; beget; be born (PASSIVE);","semper":"semper               ADV    POS\nsemper  ADV   [XXXAX]\nalways;","fuisse":"fu.isse              V      5 1 PERF ACTIVE  INF 0 X\nsum, esse, fui, futurus  V   [XXXAX]\nbe; exist; (also used to form verb perfect passive tenses) with NOM PERF PPL","ut":"ut                   CONJ\nut  CONJ   [XXXAX]\nto (\u002B subjunctive), in order that/to; how, as, when, while; even if;\n*","post":"post                 ADV    POS\npost  ADV   [XXXAX]\nbehind, afterwards, after;\npost                 PREP   ACC\npost  PREP  ACC   [XXXAX]\nbehind (space), after (time); subordinate to (rank);","assiduas":"assidu.as            V      1 1 PRES ACTIVE  IND 2 S\nassiduo, assiduare, assiduavi, assiduatus  V (1st) TRANS   [XXXFS]    veryrare\napply constantly; make constant use of (Souter); use regularly/incessantly;\nassidu.as            ADJ    1 1 ACC P F POS\nassiduus, assidua -um, assiduior -or -us, assiduissimus -a -um  ADJ   [XXXAO]\nconstant, regular; unremitting, incessant; ordinary; landowning, first-class;","in":"in                   PREP   ABL\nin  PREP  ABL   [XXXAX]\nin, on, at (space); in accordance with/regard to/the case of; within (time);\nin                   PREP   ACC\nin  PREP  ACC   [XXXAX]\ninto; about, in the mist of; according to, after (manner); for; to, among;","se":"s.e                  PRON   5 4 ABL X C\ns.e                  PRON   5 4 ACC X C\n[XXXAX]\nhim/her/it/ones-self; him/her/it; them (selves) (pl.); each other, one another;","coniurationes":"coniuration.es       N      3 1 NOM P F\nconiuration.es       N      3 1 VOC P F\nconiuration.es       N      3 1 ACC P F\nconjuratio, conjurationis  N (3rd) F   [XXXCO]\nconspiracy, plot, intrigue; alliance; band of conspirators; taking joint oath;","ausus":"aus.us               VPAR   2 1 NOM S M PERF PASSIVE PPL\naudeo, audere, ausus sum  V (2nd) SEMIDEP   [XXXAO]\nintend, be prepared; dare/have courage (to go/do), act boldly, venture, risk;\naus.us               N      4 1 NOM S M\naus.us               N      4 1 VOC S M\naus.us               N      4 1 GEN S M\naus.us               N      4 1 NOM P M\naus.us               N      4 1 VOC P M\naus.us               N      4 1 ACC P M\nausus, ausus  N (4th) M   [XXXCO]\ndaring, initiative; ventures (pl.);","sit":"s.it                 V      5 1 PRES ACTIVE  SUB 3 S\nsum, esse, fui, futurus  V   [XXXAX]\nbe; exist; (also used to form verb perfect passive tenses) with NOM PERF PPL","adfirmare":"adfirm.are           V      1 1 PRES ACTIVE  INF 0 X\nadfirm.are           V      1 1 PRES PASSIVE IND 2 S      Early\nadfirm.are           V      1 1 PRES PASSIVE IMP 2 S\nadfirmo, adfirmare, adfirmavi, adfirmatus  V (1st)   [XXXBO]\naffirm/assert (dogmatically/positively); confirm, ratify, restore; emphasize;\nSyncope   r =\u003E v.r\nSyncopated perfect often drops the \u0027v\u0027 and contracts vowel\nadfirmav.ere         V      1 1 PERF ACTIVE  IND 3 P\nadfirmo, adfirmare, adfirmavi, adfirmatus  V (1st)   [XXXBO]\naffirm/assert (dogmatically/positively); confirm, ratify, restore; emphasize;","senatui":"senat.ui             N      4 1 DAT S M\nsenatus, senatus  N (4th) M   [XXXAX]\nsenate;","aut":"aut                  CONJ\naut  CONJ   [XXXAO]\nor, or rather/else; either...or (aut...aut) (emphasizing one);","filios":"fili.os              N      2 5 ACC P M\nfilius, fili  N (2nd) M   [XXXAX]\nson;","sibi":"s.ibi                PRON   5 4 DAT X C\n[XXXAX]\nhim/her/it/ones-self; him/her/it; them (selves) (pl.); each other, one another;","successuros":"success.uros         VPAR   3 1 ACC P M FUT  ACTIVE  PPL\nsuccedo, succedere, successi, successus  V (3rd)   [XXXBX]\nclimb; advance; follow; succeed in;","neminem":"nemin.em             N      3 1 ACC S C\nnemo, neminis  N (3rd) C   [XXXAX]\nno one, nobody;","dicitur":"dic.itur             V      3 1 PRES PASSIVE IND 3 S\ndico, dicere, dixi, dictus  V (3rd)   [XXXAO]\nsay, declare, state; allege, declare positively; assert; plead (case);\ntalk/speak; make speech; play (instrument); pronounce, articulate; utter; mean;\nname/call; appoint, fix/set (date); designate, declare intention of giving;","etiam":"etiam                CONJ\netiam  CONJ   [XXXAO]\nand also, besides/furthermore, in addition/as well; even, actually; yes/indeed;\nnow too, as yet, still, even now; yet again; likewise; (particle); (et-iam);","uidisse":"uid.isse             V      2 1 PERF ACTIVE  INF 0 X\nvideo, videre, vidi, visus  V (2nd)   [XXXAX]\nsee, look at; consider; (PASS) seem, seem good, appear, be seen;","quondam":"quondam              ADV    POS\nquondam  ADV   [XXXAX]\nformerly, once, at one time; some day, hereafter;","per":"per                  PREP   ACC\nper  PREP  ACC   [XXXAX]\nthrough (space); during (time); by, by means of;","quietem":"quiet.em             N      3 1 ACC S F\nquies, quietis  N (3rd) F   [XXXBX]\nquiet, calm, rest, peace; sleep;","stateram":"stater.am            N      1 1 ACC S F\nstatera, staterae  N (1st) F   [XXXDO]    lesser\nscales, balance; grade, standard of quality; chariot pole;","media":"medi.a               N      2 4 NOM P N\nmedi.a               N      2 4 VOC P N\nmedi.a               N      2 4 ACC P N\nmedium, medi(i)  N (2nd) N   [XXXDX]    lesser\nmiddle, center; medium, mean; midst, community, public; publicity;\nmedi.a               ADJ    1 1 NOM S F POS\nmedi.a               ADJ    1 1 VOC S F POS\nmedi.a               ADJ    1 1 ABL S F POS\nmedi.a               ADJ    1 1 NOM P N POS\nmedi.a               ADJ    1 1 VOC P N POS\nmedi.a               ADJ    1 1 ACC P N POS\nmedius, media, medium  ADJ   [XXXAX]\nmiddle, middle of, mid; common, neutral, ordinary, moderate; ambiguous;\nmedi.a               V      1 1 PRES ACTIVE  IMP 2 S\nmedio, mediare, mediavi, mediatus  V (1st)   [DXXES]    Late  uncommon\nhalve, divide in the middle; be in the middle;","parte":"part.e               VPAR   3 1 VOC S M PERF PASSIVE PPL\npario, parere, peperi, partus  V (3rd)   [XXXAO]\nbear; give birth to; beget, bring forth; produce, lay (eggs); create; acquire;\npart.e               N      3 3 LOC S F\npart.e               N      3 3 DAT S F                   Early\npart.e               N      3 3 ABL S F\npars, partis  N (3rd) F   [XXXAX]\npart, region; share; direction; portion, piece; party, faction, side;\nrole (of actor); office/function/duty (usu. pl.); [centesima ~ =\u003E 1% monthly];","uestibuli":"uestibul.i           N      2 2 GEN S N\nuestibul.i           N      2 2 LOC S N\nvestibulum, vestibuli  N (2nd) N   [XXXDX]    lesser\nentrance, court;","Palatinae":"palatin.ae           ADJ    1 1 GEN S F POS\npalatin.ae           ADJ    1 1 DAT S F POS\npalatin.ae           ADJ    1 1 NOM P F POS\npalatin.ae           ADJ    1 1 VOC P F POS\nPalatinus, Palatina, Palatinum  ADJ   [XXXDS]    lesser\nPalatine; imperial; name of one of the hills of Rome, the Palatine;","domus":"dom.us               N      2 1 NOM S F\ndomus, domi  N (2nd) F   [XXXBX]\nhouse, building; home, household; (N 4 1, older N 2 1); [domi =\u003E at home];\ndom.us               N      4 1 NOM S F\ndom.us               N      4 1 VOC S F\ndom.us               N      4 1 GEN S F\ndom.us               N      4 1 NOM P F\ndom.us               N      4 1 VOC P F\ndom.us               N      4 1 ACC P F\ndomus, domus  N (4th) F   [XXXAX]\nhouse, building; home, household; (N 4 1, older N 2 1); [domu =\u003E at home];","positam":"posit.am             VPAR   3 1 ACC S F PERF PASSIVE PPL\npono, ponere, posui, positus  V (3rd) TRANS   [XXXAO]\nput/place/set; station/post (troops); pitch (camp); situate; set up; erect;\nspecify, put down; cite/quote; locate; depict; classify; assume/suppose; bury;\nlay (foundation/keel); found (town), build; plant (trees); provide/serve;\nput/lay down (load/arms), take off (clothes); shed (leaves); cut (nails);\nesteem/value/count; impose; ordain; lend, put out, offer, wager; rid/drop;","examine":"examin.e             N      3 2 LOC S N\nexamin.e             N      3 2 DAT S N                   Early\nexamin.e             N      3 2 ABL S N\nexamen, examinis  N (3rd) N   [XXXCO]\nexam/test; apparatus/process of weighing, balance;\nswarm (bees); crowd; agony;","aequo":"aequ.o               N      2 2 DAT S N\naequ.o               N      2 2 ABL S N\naequum, aequi  N (2nd) N   [XXXBO]\nlevel ground; equal footing/terms; what is right/fair/equitable, equity;\naequ.o               V      1 1 PRES ACTIVE  IND 1 S\naequo, aequare, aequavi, aequatus  V (1st) TRANS   [XXXAO]\nlevel, make even/straight; equal; compare; reach as high or deep as;\naequ.o               ADJ    1 1 DAT S M POS\naequ.o               ADJ    1 1 DAT S N POS\naequ.o               ADJ    1 1 ABL S M POS\naequ.o               ADJ    1 1 ABL S N POS\naequus, aequa -um, aequior -or -us, aequissimus -a -um  ADJ   [XXXAO]\nlevel, even, equal, like; just, kind, impartial, fair; patient, contented;","cum":"cum                  ADV    POS\ncum  ADV   [XXXAO]\nwhen, at the time/on each occasion/in the situation that; after; since/although\nas soon; while, as (well as); whereas, in that, seeing that; on/during which;\ncum                  PREP   ABL\ncum  PREP  ABL   [XXXAO]\nwith, together/jointly/along/simultaneous with, amid; supporting; attached;\nunder command/at the head of; having/containing/including; using/by means of;","altera":"alter.a              ADJ    1 4 NOM S F POS\nalter.a              ADJ    1 4 VOC S F POS\nalter.a              ADJ    1 4 ABL S F POS\nalter.a              ADJ    1 4 NOM P N POS\nalter.a              ADJ    1 4 VOC P N POS\nalter.a              ADJ    1 4 ACC P N POS\nalter, altera, alterum  ADJ   [XXXAO]\none (of two); second/another; former/latter; [unus et ~=\u003E one or two/other];\nsecond/further/next/other/latter/some person/thing (PRONominal ADJ); either;","lance":"lanc.e               N      3 3 LOC S M\nlanc.e               N      3 3 DAT S M                   Early\nlanc.e               N      3 3 ABL S M\nlanx, lancis  N (3rd) M   [XXXCO]\nplate, metal dish, tray, platter, charger; pan of a pair of scales;","Claudius":"claudi.us            N      2 5 NOM S M\nClaudius, Claudi  N (2nd) M   [XXXCO]\nClaudius;  (Roman gens name); (Ti. C. Nero Germanicus, Emperor, 41-54 AD); Lame\nclaudi.us            ADJ    1 1 NOM S M POS\nClaudius, Claudia, Claudium  ADJ   [CLICO]    Classic\nClaudius; Roman gens; (Ti. C. Nero Germanicus, Emperor, 41-54 AD); the_Lame;","et":"et                   CONJ\net  CONJ   [XXXAX]\nand, and even; also, even;  (et ... et = both ... and);","Nero":"nero                 N      3 1 NOM S M\nnero                 N      3 1 VOC S M\nNero, Neronis  N (3rd) M   [CLIBO]    Classic\nNero; (cognomen of Claudian gens); (Nero Claudius Caesar -\u003E Emperor, 54-69);\nSyncope   r =\u003E v.r\nSyncopated perfect often drops the \u0027v\u0027 and contracts vowel\nnev.ero              V      2 1 FUTP ACTIVE  IND 1 S\nneo, nere, nevi, netus  V (2nd)   [XXXDX]    lesser\nspin; weave; produce by spinning;","starent":"st.arent             V      1 1 IMPF ACTIVE  SUB 3 P\nsto, stare, steti, status  V (1st)   [XXXAX]\nstand, stand still, stand firm; remain, rest;","ipse":"ips.e                PRON   6 2 NOM S M\nipse, ipsa, ipsum  PRON   [XXXAO]\nhimself/herself/itself; the very/real/actual one; in person; themselves (pl.);","ac":"ac                   CONJ\nac  CONJ   [XXXAO]\nand, and also, and besides;","filii":"fili.i               N      2 5 GEN S M                   Later\nfili.i               N      2 5 LOC S M\nfili.i               N      2 5 NOM P M\nfili.i               N      2 5 VOC P M\nfilius, fili  N (2nd) M   [XXXAX]\nson;","nec":"nec                  ADV    POS\nnec  ADV   [XXXDX]    lesser\nnor; and not, not, neither, not even;\nnec                  CONJ\nnec  CONJ   [XXXAX]\nnor, and..not; not..either, not even;","res":"r.es                 N      5 1 NOM S F\nr.es                 N      5 1 VOC S F\nr.es                 N      5 1 NOM P F\nr.es                 N      5 1 VOC P F\nr.es                 N      5 1 ACC P F\nres, rei  N (5th) F   [XXXAX]\nthing; event/affair/business; fact; cause; property; [~ familiaris =\u003E property]\nres                  N      9 9 X   X N\nres, undeclined  N N   [DEQEW]    Late  uncommon\nres; (20th letter of Hebrew alphabet); (transliterate as R);\n*","fefellit":"fefell.it            V      3 1 PERF ACTIVE  IND 3 S\nfallo, fallere, fefelli, falsus  V (3rd)   [XXXAX]\ndeceive; slip by; disappoint; be mistaken, beguile, drive away; fail; cheat;","quando":"quando               ADV    POS\nquando  ADV   [XXXAX]\nwhen (interog), at what time; at any time (indef adv);\nquando               CONJ\nquando  CONJ   [XXXDX]    lesser\nwhen, since, because; [si quando =\u003E if ever];","totidem":"totidem              ADJ    9 9 X   X X POS\ntotidem, undeclined  ADJ   [XXXBO]\nas many; just so/as many; the equivalent number of, same (as specified before);","annis":"ann.is               N      2 1 LOC P M\nann.is               N      2 1 DAT P M\nann.is               N      2 1 ABL P M\nannus, anni  N (2nd) M   [XXXAO]\nyear (astronomical/civil); age, time of life; year\u0027s produce; circuit, course;","parique":"que                  TACKON\n-que = and (enclitic, translated before attached word); completes plerus/uter;\npar.i                N      3 1 LOC S C                   Early\npar.i                N      3 1 DAT S C\npar, paris  N (3rd) C   [XXXCO]\nmate, spouse, partner; match, peer; person of same kind/rank/station/prestige;\nequal, counterpart; companion/partner at dinner; adversary, opponent;\npar.i                N      3 2 LOC S N                   Early\npar.i                N      3 2 DAT S N\npar, paris  N (3rd) N   [XXXBO]\npair, set of two; conjugal pair; pair of associates/adversaries/contestants;\npar.i                ADJ    3 1 DAT S X POS\npar.i                ADJ    3 1 ABL S X POS\npar, paris (gen.), -, parissimus -a -um  ADJ   [XXXAS]\nequal (to); a match for; of equal size/rank/age; fit/suitable/right/proper;\nequal in power/prestige/importance/rank/status/office/authority; comparable;\ncorresponding in degree, proportionate, commensurate (unlike qualities);\nmeasuring up, adequate, matching; well-matched; fair, equitable, reasonable;\nbalanced/level; S:even, divisible by two; [~ facere =\u003E settle accounts];\npar.i                V      4 1 PRES ACTIVE  IMP 2 S\npario, parire, peperi, paritus  V (4th)   [BXXEO]    Early  uncommon\npar.i                V      3 1 PRES PASSIVE INF 0 X\npario, parere, peperi, partus  V (3rd)   [XXXAO]\nbear; give birth to; beget, bring forth; produce, lay (eggs); create; acquire;","temporis":"tempor.is            N      3 2 GEN S N\ntempus, temporis  N (3rd) N   [XXXAX]\ntime, condition, right time; season, occasion; necessity;","spatio":"spati.o              N      2 4 DAT S N\nspati.o              N      2 4 ABL S N\nspatium, spati(i)  N (2nd) N   [XXXAO]\nspace; area/expanse, room (for); intervening space, gap/interval; length/width;\nrace course, lap, circuit; closed way/walk, turn; track (planet); act of play;\ninterval, time, extent, period, term; duration; distance; area; size; bulk;\n*","utrique":"que                  TACKON\n-que = and (enclitic, translated before attached word); completes plerus/uter;\nutr.i                N      3 3 LOC S M                   Early\nutr.i                N      3 3 DAT S M\nutr.i                N      3 3 ABL S M\nuter, utris  N (3rd) M   [XXXDS]    lesser\nutr.i                N      3 4 LOC S N                   Early\nutr.i                N      3 4 DAT S N\nutr.i                N      3 4 ABL S N\nuter, utris  N (3rd) N   [XXXDS]    lesser\nskin; wine/water skin; bag/bottle made of skin/hide; (inflated for flotation);\nutr.i                ADJ    1 4 DAT S X POS\nutr.i                ADJ    1 4 NOM P M POS\nutr.i                ADJ    1 4 VOC P M POS\nuter, utra, utrum  ADJ   [XXXAO]\nwhich (of two), whichever, no matter which; one, either, one or other;\n(w/que) each/either (of two); both (separately); each side (pl.), each set;","imperauerunt":"imperau.erunt        V      1 1 PERF ACTIVE  IND 3 P\nimpero, imperare, imperavi, imperatus  V (1st)   [XXXAX]\norder, command, levy; rule (over) (w/DAT);"};
+        </script>
+
+        <script>
+            function dict(word) {
+                var lines = dictionary[word].split('\n');
+                var buffer = [];
+                var semiColon = false;
+
+                for(let line of lines) {
+                    line = line.trim();
+                    if (line.includes(';')) {
+                        semiColon = true;
+                    } else {
+                        if (semiColon) {
+                            buffer.push('');
+                        }
+
+                        semiColon = false;
+                    }
+
+                    buffer.push(line);
+                }
+
+                document.getElementById('dictcontent').innerHTML = buffer.join('\n');
+                document.getElementById('dictword').innerHTML = word;
+                document.getElementById('dictwindow').style.display = 'block';
+            }
+
+            function close_dict() {
+                document.getElementById('dictwindow').style.display = 'none';
+            }
+
+            function open_github() {
+                window.open('https://bolner.github.io/rainbow-latin-reader', '_blank').focus();
+            }
+
+            function topbar_click() {
+                var element = document.getElementById('maintable');
+                element.classList.toggle('colored');
+            }
+        </script>
+    </body>
+</html>
