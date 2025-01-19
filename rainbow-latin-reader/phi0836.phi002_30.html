@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html>
+    <!--
+        Copyright 2024 Tamas Bolner
+
+        Licensed under the Apache License, Version 2.0 (the "License");
+        you may not use this file except in compliance with the License.
+        You may obtain a copy of the License at
+
+            http://www.apache.org/licenses/LICENSE-2.0
+
+        Unless required by applicable law or agreed to in writing, software
+        distributed under the License is distributed on an "AS IS" BASIS,
+        WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        See the License for the specific language governing permissions and
+        limitations under the License.
+    -->
+    <head>
+        <meta charset="UTF-8">
+        <title>De Medicina (Celsus)</title>
+
+        <style>
+            :root {
+			  --link-color: rgb(127, 161, 171);
+			}
+
+            html {
+                scroll-padding-top: 3em;
+            }
+
+            body {
+                margin: 0;
+                margin-top: 2.5em;
+                margin-bottom: 2em;
+                padding: 0;
+                padding-right: 0.7em;
+                font-size: calc(1vw + 0.3em);
+                color: rgb(197, 203, 211);
+                background-color: rgb(10, 17, 27);
+            }
+
+            table.section {
+                border-collapse: collapse;
+                border: 0;
+                padding: 0;
+                margin: 0;
+            }
+
+            table.section tr {
+                border: 0;
+                padding: 0;
+                margin: 0;
+            }
+
+            table.section td.margin {
+                width: 3.5em;
+                border: 0;
+                padding: 0.5em;
+                padding-top: 0.7em;
+                vertical-align: top;
+                text-align: right;
+            }
+
+            table.section td.latin {
+                width: 50em;
+                background-color: rgb(0, 0, 0);
+                border: 0;
+                padding: 0.5em;
+                vertical-align: top;
+            }
+
+            table.section td.english {
+                width: 50em;
+                background-color: rgb(13, 34, 53);
+                border: 0;
+                padding: 0.5em;
+                vertical-align: top;
+            }
+
+            table.section td.title {
+                background-color: black;
+                border: 0;
+                padding: 0.5em;
+                padding-top: 0em;
+            }
+
+            table.section td.margin a {
+                color: var(--link-color);
+                text-decoration: underline;
+            }
+
+            table.section td.margin a:hover {
+                color: white;
+            }
+
+            table.section td.title div.author {
+                float: right;
+            }
+
+            table.section td.english div.translator {
+                float: right;
+                margin-top: 2.5em;
+            }
+
+            h1, h2 {
+                background-color: transparent;
+            }
+
+            td.title h2 {
+                margin-bottom: 0;
+            }
+
+            div.word {
+                display: inline;
+                background-color: transparent;
+                line-height: 1.5em;
+                padding: 0.1em;
+                margin-left: -0.2em;
+            }
+
+            /*
+				Naviagation
+			*/
+			div.navigation {
+				padding: 0.6em;
+				text-align: center
+			}
+			
+			div.navigation a {
+				color: var(--link-color);
+                text-decoration: underline;
+				padding-left: 0.3em;
+				padding-right: 0.3em;
+			}
+			
+			div.navigation a:hover {
+				color: white;
+                text-decoration: underline;
+			}
+
+            div.navigation div.current-page {
+                display: inline;
+                background-color: #134061;
+                padding-right: 0.4em;
+                padding-left: 0.4em;
+            }
+
+            /*
+                Top bar
+            */
+            .topbar {
+                white-space: nowrap;
+				overflow: hidden;
+                background-color: rgb(13, 24, 40);
+                position: fixed;
+                top: 0;
+                width: 100%;
+                padding: 0.4em;
+                padding-top: 0.1em;
+
+                border-bottom: 0.1em;
+                border-bottom-color: rgb(60, 87, 126);
+                border-bottom-style: solid;
+            }
+
+            .topbar div.rainbow {
+                background: linear-gradient(in hsl longer hue 45deg, red 0 0);
+                text-shadow: 0.15em 0.15em 0.2em #000, -0.15em -0.15em 0.2em #000, 0.15em -0.15em 0.2em #000, -0.15em 0.15em 0.2em #000;
+                position: absolute;
+				right: 0;
+                margin-right: 1em;
+                padding-left: 1em;
+                padding-right: 1em;
+            }
+
+            .topbar div.rainbow:hover {
+                cursor: pointer;
+                background: linear-gradient(in hsl longer hue 125deg, red 0 0);
+            }
+
+            .topbar div.word.sample {
+                font-size: 0.9em;
+                padding-left: 0.2em;
+                padding-right: 0.2em;
+                cursor: pointer;
+            }
+
+            .topbar div.word.title {
+                margin-left: 0.5em;
+            }
+
+            /*
+                Cases
+            */
+            .colored div.nom { /* Nominative */
+                background-color: rgb(4 57 4);
+            }
+
+            .colored div.acc { /* Accusative */
+                background-color: rgb(255, 155, 0);
+                color: black;
+            }
+
+            .colored div.gen { /* Genitive */
+                background-color: rgb(112 0 0);
+            }
+
+            .colored div.dat { /* Dative */
+                background-color: rgb(26 41 141);
+            }
+
+            .colored div.abl { /* Ablative */
+                background-color: rgb(85, 0, 116);
+                color: white;
+            }
+
+            .colored div.voc { /* Vocative */
+                background-color: rgb(237, 237, 145);
+                color: black;
+            }
+
+            .colored div.loc { /* Locative */
+                background-color: rgb(144, 220, 219);
+                color: black;
+            }
+
+            .colored div.pas { /* Voice = Passive */
+                text-decoration: underline;
+                text-underline-offset: 0.2em;
+            }
+
+            .colored div.dep { /* Voice = Deponent */
+                text-decoration: underline;
+                text-decoration-style: dashed;
+                text-underline-offset: 0.2em;
+            }
+
+            div.grey {
+                background-color: rgb(83 83 83);
+            }
+
+            div.ck:hover {
+                cursor: pointer;
+                background-color: #00776b;
+                color: white;
+            }
+
+            /*
+				Footer
+			*/
+			div.footer {
+				text-align: center;
+				font-size: 0.86em;
+				padding-top: 0.4em;
+			}
+			
+			div.footer a, div.footer a:visited {
+				color: var(--link-color);
+			}
+			
+			div.footer a:hover {
+				color: white;
+			}
+
+            /*
+                Dictionary
+            */
+            div#dictwindow {
+                display: none;
+            }
+
+            div.dictionary {
+                background-color: #19424b;
+                position: fixed;
+                left: 53vw;
+                width: 45vw;
+                top: 15%;
+                height: 70%;
+                overflow-y: scroll;
+                
+                padding: 0px;
+                box-shadow: 0.1em 0.1em 0.8em 0.8em black;
+
+                border:1px solid white;
+            }
+
+            div.dictionary div.content {
+                padding: 1em;
+                padding-top: 4.2em;
+                font-size: 0.74em;
+                font-family: monospace;
+                white-space: pre-wrap;
+            }
+
+            div.dictionary div.control {
+                position: fixed;
+                background-color: #061827;
+                padding: 0.5em;
+            }
+
+            div.dictionary div.control:hover {
+                cursor: pointer;
+                background-color: #5fabea;
+                color: rgb(0, 0, 0);
+            }
+
+            div.dictionary div#dictword {
+                position: fixed;
+                background-color: #09281b;
+                padding: 0.5em;
+                right: 2vw;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="topbar colored">
+            <div class="word sample nom" onclick="topbar_click()">Nominative</div>
+            <div class="word sample acc" onclick="topbar_click()">Accusative</div>
+            <div class="word sample dat" onclick="topbar_click()">Dative</div>
+            <div class="word sample abl" onclick="topbar_click()">Ablative</div>
+            <div class="word sample gen" onclick="topbar_click()">Genitive</div>
+            <div class="word sample voc" onclick="topbar_click()">Vocative</div>
+            <div class="word sample loc" onclick="topbar_click()">Locative</div>
+            <div class="word sample pas grey" onclick="topbar_click()">Passive</div>
+            <div class="word sample dep grey" onclick="topbar_click()">Deponent</div>
+
+            <div class="word title">De Medicina (Celsus)</div>
+
+            <div class="word rainbow" onclick="open_github()">Rainbow Latin Reader</div>
+        </div>
+
+        <div class="navigation">
+            <a href="index.html">Index</a>
+                        <a href="phi0836.phi002_1.html">1 - 4</a>
+                        <a href="phi0836.phi002_2.html">5 - 8</a>
+                        <a href="phi0836.phi002_3.html">9 - 12</a>
+                        <a href="phi0836.phi002_4.html">13 - 16</a>
+                        <a href="phi0836.phi002_5.html">17 - 20</a>
+                        <a href="phi0836.phi002_6.html">21 - 24</a>
+                        <a href="phi0836.phi002_7.html">25 - 28</a>
+                        <a href="phi0836.phi002_8.html">29 - 32</a>
+                        <a href="phi0836.phi002_9.html">33 - 36</a>
+                        <a href="phi0836.phi002_10.html">37 - 40</a>
+                        <a href="phi0836.phi002_11.html">41 - 44</a>
+                        <a href="phi0836.phi002_12.html">45 - 48</a>
+                        <a href="phi0836.phi002_13.html">49 - 52</a>
+                        <a href="phi0836.phi002_14.html">53 - 56</a>
+                        <a href="phi0836.phi002_15.html">57 - 60</a>
+                        <a href="phi0836.phi002_16.html">61 - 64</a>
+                        <a href="phi0836.phi002_17.html">65 - 68</a>
+                        <a href="phi0836.phi002_18.html">69 - 72</a>
+                        <a href="phi0836.phi002_19.html">73 - 76</a>
+                        <a href="phi0836.phi002_20.html">77 - 80</a>
+                        <a href="phi0836.phi002_21.html">81 - 84</a>
+                        <a href="phi0836.phi002_22.html">85 - 88</a>
+                        <a href="phi0836.phi002_23.html">89 - 92</a>
+                        <a href="phi0836.phi002_24.html">93 - 96</a>
+                        <a href="phi0836.phi002_25.html">97 - 100</a>
+                        <a href="phi0836.phi002_26.html">101 - 104</a>
+                        <a href="phi0836.phi002_27.html">105 - 108</a>
+                        <a href="phi0836.phi002_28.html">109 - 112</a>
+                        <a href="phi0836.phi002_29.html">113 - 116</a>
+                        <div class="current-page">117 - 120</div>
+                        <a href="phi0836.phi002_31.html">121 - 124</a>
+                        <a href="phi0836.phi002_32.html">125 - 128</a>
+                        <a href="phi0836.phi002_33.html">129 - 132</a>
+                        <a href="phi0836.phi002_34.html">133 - 136</a>
+                        <a href="phi0836.phi002_35.html">137 - 140</a>
+                        <a href="phi0836.phi002_36.html">141 - 144</a>
+                        <a href="phi0836.phi002_37.html">145 - 148</a>
+                        <a href="phi0836.phi002_38.html">149 - 152</a>
+                        <a href="phi0836.phi002_39.html">153 - 156</a>
+                        <a href="phi0836.phi002_40.html">157 - 160</a>
+                        <a href="phi0836.phi002_41.html">161 - 164</a>
+                        <a href="phi0836.phi002_42.html">165 - 168</a>
+                        <a href="phi0836.phi002_43.html">169 - 172</a>
+                        <a href="phi0836.phi002_44.html">173 - 176</a>
+                        <a href="phi0836.phi002_45.html">177 - 180</a>
+                        <a href="phi0836.phi002_46.html">181 - 184</a>
+                        <a href="phi0836.phi002_47.html">185 - 188</a>
+                        <a href="phi0836.phi002_48.html">189 - 192</a>
+                        <a href="phi0836.phi002_49.html">193 - 196</a>
+                        <a href="phi0836.phi002_50.html">197 - 200</a>
+                        <a href="phi0836.phi002_51.html">201 - 204</a>
+                        <a href="phi0836.phi002_52.html">205 - 208</a>
+                        <a href="phi0836.phi002_53.html">209 - 211</a>
+        </div>
+
+        <div class="dictionary" id="dictwindow">
+            <div class="control" onclick="close_dict()">[Close]</div>
+            <div id="dictword"></div>
+            <div class="content" id="dictcontent"></div>
+        </div>
+
+        <table id="maintable" class="section colored">
+            <tr>
+                <td class="margin">&nbsp;</td>
+
+                <td class="title">
+                    <h2>De Medicina</h2>
+                    <div class="author"><i>Author: Celsus</i></div>
+                </td>
+
+                <td class="english">
+                        <div class="translator"><i>Translator: Walter George Spencer</i></div>
+                </td>
+            </tr>
+
+            <tr id="s117">
+                <td class="margin"><a href="#s117">117</a></td>
+
+                <td class="latin">
+                    <div class="ck word" onclick="dict('Euocat')">Euocat</div> <div class="ck word" onclick="dict('et')">et</div> <div class="ck word" onclick="dict('educit')">educit</div> <div class="ck word nom" onclick="dict('ladanum')">ladanum</div>, <div class="ck word nom" onclick="dict('alumen')">alumen</div> <div class="ck word nom" onclick="dict('rotundum')">rotundum</div>, <div class="ck word nom" onclick="dict('hebenus')">hebenus</div>, <div class="ck word gen" onclick="dict('lini')">lini</div> <div class="ck word nom" onclick="dict('semen')">semen</div>, <div class="ck word nom" onclick="dict('omphacium')">omphacium</div>, <div class="ck word" onclick="dict('fel')">fel</div>, <div class="ck word abl" onclick="dict('chalcitis')">chalcitis</div>, <div class="ck word nom" onclick="dict('bdellium')">bdellium</div>, <div class="ck word nom" onclick="dict('resina')">resina</div> <div class="ck word nom" onclick="dict('terebenthina')">terebenthina</div> <div class="ck word" onclick="dict('et')">et</div> <div class="ck word nom" onclick="dict('pinea')">pinea</div>, <div class="ck word dat" onclick="dict('propolis')">propolis</div>, <div class="ck word nom" onclick="dict('ficus')">ficus</div> <div class="ck word nom" onclick="dict('arida')">arida</div> <div class="ck word nom" onclick="dict('decocta')">decocta</div>, <div class="ck word nom" onclick="dict('stercus')">stercus</div> <div class="ck word gen" onclick="dict('columbae')">columbae</div>, <div class="ck word nom" onclick="dict('pumex')">pumex</div>, <div class="ck word nom" onclick="dict('farina')">farina</div> <div class="ck word gen" onclick="dict('lolii')">lolii</div>, <div class="ck word nom" onclick="dict('grossi')">grossi</div> <div class="ck word" onclick="dict('in')">in</div> <div class="ck word abl" onclick="dict('aqua')">aqua</div> <div class="ck word nom" onclick="dict('cocti')">cocti</div>, <div class="ck word nom" onclick="dict('elaterium')">elaterium</div>, <div class="ck word gen" onclick="dict('lauri')">lauri</div> <div class="ck word nom" onclick="dict('bacae')">bacae</div>, <div class="ck word acc" onclick="dict('nitrum')">nitrum</div>, <div class="ck word nom" onclick="dict('sal')">sal</div>.
+                </td>
+
+                <td class="english">
+                    12 The following are epispastics: ladanum, round alum, ebony, linseed, omphacium, ox-bile, copper ore, bdellium, turpentine and pine resin, propolis, dried fig cooked, pigeons' dung, pumice, darnel meal, unripe figs cooked in water, elaterium, laurel berries, soda, salt.
+                </td>
+            </tr>
+            <tr id="s118">
+                <td class="margin"><a href="#s118">118</a></td>
+
+                <td class="latin">
+                    <div class="ck word" onclick="dict('Leuat')">Leuat</div> <div class="ck word nom" onclick="dict('id')">id</div>, <div class="ck word nom" onclick="dict('quod')">quod</div> <div class="ck word nom" onclick="dict('exasperatum')">exasperatum</div> <div class="ck word" onclick="dict('est')">est</div>, <div class="ck word acc" onclick="dict('spodium')">spodium</div>, <div class="ck word nom" onclick="dict('hebenus')">hebenus</div>, <div class="ck word gen" onclick="dict('cummi')">cummi</div>, <div class="ck word gen" onclick="dict('oui')">oui</div> <div class="ck word acc" onclick="dict('album')">album</div>, <div class="ck word acc" onclick="dict('lac')">lac</div>, <div class="ck word acc" onclick="dict('tragacanthum')">tragacanthum</div>.
+                </td>
+
+                <td class="english">
+                    13 The following relieve any irritated part: oxide of zinc, ebony, gum, white of egg, milk, tragacanth.
+                </td>
+            </tr>
+            <tr id="s119">
+                <td class="margin"><a href="#s119">119</a></td>
+
+                <td class="latin">
+                    <div class="ck word acc" onclick="dict('Carnem')">Carnem</div> <div class="ck word" onclick="dict('alit')">alit</div> <div class="ck word" onclick="dict('et')">et</div> <div class="ck word acc" onclick="dict('ulcus')">ulcus</div> <div class="ck word" onclick="dict('implet')">implet</div> <div class="ck word nom" onclick="dict('resina')">resina</div> <div class="ck word nom" onclick="dict('pinea')">pinea</div>, <div class="word abl">ochra</div> <div class="ck word voc" onclick="dict('Attice')">Attice</div> <div class="ck word" onclick="dict('uel')">uel</div> <div class="word voc">Scyrice</div>, <div class="ck word abl" onclick="dict('cera')">cera</div>, <div class="ck word acc" onclick="dict('buturum')">buturum</div>.
+                </td>
+
+                <td class="english">
+                    14 The following make the flesh grow, and fill in ulcerations: pine-resin, ochre from Attica or Scyros, wax, butter.
+                </td>
+            </tr>
+            <tr id="s120">
+                <td class="margin"><a href="#s120">120</a></td>
+
+                <td class="latin">
+                    <div class="ck word" onclick="dict('Molliunt')">Molliunt</div> <div class="ck word nom" onclick="dict('aes')">aes</div> <div class="ck word acc" onclick="dict('combustum')">combustum</div>, <div class="ck word nom" onclick="dict('terra')">terra</div> <div class="word nom">Eretria</div>, <div class="ck word acc" onclick="dict('nitrum')">nitrum</div>, <div class="ck word gen" onclick="dict('papaueris')">papaueris</div> <div class="ck word nom" onclick="dict('lacrima')">lacrima</div>, <div class="word acc">Hammoniacum</div>, <div class="word nom">bdellion</div>, <div class="ck word nom" onclick="dict('cera')">cera</div>, <div class="ck word nom" onclick="dict('sebum')">sebum</div>, <div class="ck word nom" onclick="dict('adeps')">adeps</div>, <div class="ck word acc" onclick="dict('oleum')">oleum</div>, <div class="ck word nom" onclick="dict('ficus')">ficus</div> <div class="ck word nom" onclick="dict('arida')">arida</div>, <div class="ck word acc" onclick="dict('sesamum')">sesamum</div>, <div class="ck word nom" onclick="dict('sertula')">sertula</div> <div class="ck word nom" onclick="dict('Campana')">Campana</div>, <div class="ck word nom" onclick="dict('narcissi')">narcissi</div> <div class="ck word" onclick="dict('et')">et</div> <div class="ck word nom" onclick="dict('radix')">radix</div> <div class="ck word" onclick="dict('et')">et</div> <div class="ck word nom" onclick="dict('semen')">semen</div>, <div class="ck word gen" onclick="dict('rosae')">rosae</div> <div class="ck word nom" onclick="dict('folia')">folia</div>, <div class="ck word nom" onclick="dict('coagulum')">coagulum</div>, <div class="ck word nom" onclick="dict('uitellus')">uitellus</div> <div class="ck word nom" onclick="dict('crudus')">crudus</div>, <div class="ck word nom" onclick="dict('amarae')">amarae</div> <div class="ck word nom" onclick="dict('nuces')">nuces</div>, <div class="ck word nom" onclick="dict('medullae')">medullae</div> <div class="ck word nom" onclick="dict('omnes')">omnes</div>, sti <div class="ck word" onclick="dict('bi')">bi</div>, <div class="ck word nom" onclick="dict('pix')">pix</div>, <div class="ck word nom" onclick="dict('coclea')">coclea</div> <div class="ck word nom" onclick="dict('cocta')">cocta</div>, <div class="ck word gen" onclick="dict('cicutae')">cicutae</div> <div class="ck word nom" onclick="dict('semen')">semen</div>, <div class="ck word gen" onclick="dict('plumbi')">plumbi</div> <div class="ck word nom" onclick="dict('recrementum')">recrementum</div> ( <div class="word">&#931;&#922;&#937;&#929;&#921;&#913;&#925;</div> <div class="word">&#924;&#927;&#923;&#933;&#914;&#916;&#927;&#933;</div> <div class="ck word nom" onclick="dict('Graeci')">Graeci</div> <div class="ck word" onclick="dict('uocant')">uocant</div>), <div class="ck word nom" onclick="dict('panaces')">panaces</div>, <div class="ck word acc" onclick="dict('cardamomum')">cardamomum</div>, <div class="ck word nom" onclick="dict('galbanum')">galbanum</div>, <div class="ck word abl" onclick="dict('resina')">resina</div>, <div class="ck word abl" onclick="dict('uua')">uua</div> <div class="ck word" onclick="dict('t')">t</div> <div class="ck word" onclick="dict('aminia')">aminia</div>, <div class="ck word nom" onclick="dict('styrax')">styrax</div>, <div class="ck word nom" onclick="dict('iris')">iris</div>, <div class="ck word acc" onclick="dict('balsamum')">balsamum</div>, <div class="ck word nom" onclick="dict('sordes')">sordes</div> <div class="ck word" onclick="dict('ex')">ex</div> <div class="ck word abl" onclick="dict('gymnasio')">gymnasio</div>, <div class="ck word nom" onclick="dict('sulpur')">sulpur</div>, <div class="ck word gen" onclick="dict('buturum')">buturum</div>, <div class="ck word abl" onclick="dict('ruta')">ruta</div>.
+                </td>
+
+                <td class="english">
+                    15 The following are emollients: calcined copper, Eretrian earth, soda, poppy-tears, ammoniacum, bdellium, wax, suet, soft fat, oil, dried fig, sesamum, melilot, narcissus root and seed, rose-leaves, curd, raw yolk of egg, bitter almonds, marrow of any kind, antimony sulphide, pitch, snails boiled, hemlock seed, lead-slag which the Greeks call skwri/a molu/bdou, all-heal, cardamon, galbanum, resin, black bryony berries, storax, iris, balsam, gymnasium sordes, sulphur, butter, rue.
+                </td>
+            </tr>
+        </table>
+
+        <div class="navigation">
+            <a href="index.html">Index</a>
+                        <a href="phi0836.phi002_1.html">1 - 4</a>
+                        <a href="phi0836.phi002_2.html">5 - 8</a>
+                        <a href="phi0836.phi002_3.html">9 - 12</a>
+                        <a href="phi0836.phi002_4.html">13 - 16</a>
+                        <a href="phi0836.phi002_5.html">17 - 20</a>
+                        <a href="phi0836.phi002_6.html">21 - 24</a>
+                        <a href="phi0836.phi002_7.html">25 - 28</a>
+                        <a href="phi0836.phi002_8.html">29 - 32</a>
+                        <a href="phi0836.phi002_9.html">33 - 36</a>
+                        <a href="phi0836.phi002_10.html">37 - 40</a>
+                        <a href="phi0836.phi002_11.html">41 - 44</a>
+                        <a href="phi0836.phi002_12.html">45 - 48</a>
+                        <a href="phi0836.phi002_13.html">49 - 52</a>
+                        <a href="phi0836.phi002_14.html">53 - 56</a>
+                        <a href="phi0836.phi002_15.html">57 - 60</a>
+                        <a href="phi0836.phi002_16.html">61 - 64</a>
+                        <a href="phi0836.phi002_17.html">65 - 68</a>
+                        <a href="phi0836.phi002_18.html">69 - 72</a>
+                        <a href="phi0836.phi002_19.html">73 - 76</a>
+                        <a href="phi0836.phi002_20.html">77 - 80</a>
+                        <a href="phi0836.phi002_21.html">81 - 84</a>
+                        <a href="phi0836.phi002_22.html">85 - 88</a>
+                        <a href="phi0836.phi002_23.html">89 - 92</a>
+                        <a href="phi0836.phi002_24.html">93 - 96</a>
+                        <a href="phi0836.phi002_25.html">97 - 100</a>
+                        <a href="phi0836.phi002_26.html">101 - 104</a>
+                        <a href="phi0836.phi002_27.html">105 - 108</a>
+                        <a href="phi0836.phi002_28.html">109 - 112</a>
+                        <a href="phi0836.phi002_29.html">113 - 116</a>
+                        <div class="current-page">117 - 120</div>
+                        <a href="phi0836.phi002_31.html">121 - 124</a>
+                        <a href="phi0836.phi002_32.html">125 - 128</a>
+                        <a href="phi0836.phi002_33.html">129 - 132</a>
+                        <a href="phi0836.phi002_34.html">133 - 136</a>
+                        <a href="phi0836.phi002_35.html">137 - 140</a>
+                        <a href="phi0836.phi002_36.html">141 - 144</a>
+                        <a href="phi0836.phi002_37.html">145 - 148</a>
+                        <a href="phi0836.phi002_38.html">149 - 152</a>
+                        <a href="phi0836.phi002_39.html">153 - 156</a>
+                        <a href="phi0836.phi002_40.html">157 - 160</a>
+                        <a href="phi0836.phi002_41.html">161 - 164</a>
+                        <a href="phi0836.phi002_42.html">165 - 168</a>
+                        <a href="phi0836.phi002_43.html">169 - 172</a>
+                        <a href="phi0836.phi002_44.html">173 - 176</a>
+                        <a href="phi0836.phi002_45.html">177 - 180</a>
+                        <a href="phi0836.phi002_46.html">181 - 184</a>
+                        <a href="phi0836.phi002_47.html">185 - 188</a>
+                        <a href="phi0836.phi002_48.html">189 - 192</a>
+                        <a href="phi0836.phi002_49.html">193 - 196</a>
+                        <a href="phi0836.phi002_50.html">197 - 200</a>
+                        <a href="phi0836.phi002_51.html">201 - 204</a>
+                        <a href="phi0836.phi002_52.html">205 - 208</a>
+                        <a href="phi0836.phi002_53.html">209 - 211</a>
+        </div>
+
+        <div class="footer">
+			<b>Rainbow Latin Reader</b> by <a href="https://github.com/bolner" target="_blank">Tamas Bolner</a>. Based on 3 projects:
+			<a href="https://github.com/PerseusDL/canonical-latinLit" target="_blank">Perseus canonical Latin literature</a>,
+			<a href="https://github.com/lascivaroma/latin-lemmatized-texts" target="_blank">Lemmatized Latin texts by Thibault Clérice et al.</a>
+			and <a href="https://mk270.github.io/whitakers-words/dictionary.html" target="_blank">Whitaker's Words</a>.
+            <br>
+            Generated on 2025-01-19
+		</div>
+
+        <script>
+            var dictionary = {"Euocat":"euoc.at              V      1 1 PRES ACTIVE  IND 3 S\nevoco, evocare, evocavi, evocatus  V (1st)   [XXXDX]    lesser\ncall forth; lure/entice out; summon, evoke;","et":"et                   CONJ\net  CONJ   [XXXAX]\nand, and even; also, even;  (et ... et = both ... and);","educit":"educ.it              V      3 1 PRES ACTIVE  IND 3 S\neduco, educere, eduxi, eductus  V (3rd)   [XXXDX]    lesser\nlead out; draw up; bring up; rear;","ladanum":"ladan.um             N      2 2 NOM S N\nladan.um             N      2 2 VOC S N\nladan.um             N      2 2 ACC S N\nladan.um             N      2 2 GEN P N                   uncommon\nladanum, ladani  N (2nd) N   [XAXNS]    Pliny\nresinous juice (from shrub lada); ladanum;","alumen":"alumen               N      3 2 NOM S N\nalumen               N      3 2 VOC S N\nalumen               N      3 2 ACC S N\nalumen, aluminis  N (3rd) N   [XXXCO]\nalum; astringent substance (sulfates of aluminum), potash alum;","rotundum":"rotund.um            ADJ    1 1 NOM S N POS\nrotund.um            ADJ    1 1 VOC S N POS\nrotund.um            ADJ    1 1 ACC S M POS\nrotund.um            ADJ    1 1 ACC S N POS\nrotundus, rotunda -um, rotundior -or -us, rotundissimus -a -um  ADJ   [XXXAO]\nround, circular; wheel-like; spherical, globular; smooth, finished; facile;","hebenus":"heben.us             N      2 1 NOM S C\nhebenus, hebeni  N (2nd) C   [XXXDO]    lesser\nebony (wood or tree of genus Diospyrus);","lini":"lin.i                N      2 2 GEN S N\nlin.i                N      2 2 LOC S N\nlinum, lini  N (2nd) N   [XXXDX]    lesser\nflax, linen cloth/thread; rope; fishing line; (hunter\u0027s/fisher\u0027s) net;\nlin.i                V      3 1 PRES PASSIVE INF 0 X\nlino, linere, levi, litus  V (3rd) TRANS   [XXXCO]\nlin.i                V      4 1 PRES ACTIVE  IMP 2 S\nlinio, linire, linivi, linitus  V (4th) TRANS   [XXXEO]    uncommon\nsmear, plaster (with); seal (wine jar); erase/rub over; befoul; cover/overlay;","semen":"semen                N      3 2 NOM S N\nsemen                N      3 2 VOC S N\nsemen                N      3 2 ACC S N\nsemen, seminis  N (3rd) N   [XXXAX]\nseed;","omphacium":"omphaci.um           N      2 1 ACC S M\nomphaci.um           N      2 1 GEN P M                   uncommon\nomphacius, omphacii  N (2nd) M   [XAXNS]    Pliny\njuice of unripe fruit (olives or grapes);","fel":"fel                  ADJ    9 8 X   X X POS\nfel., abb.  ADJ   [FEXEE]    Medieval  uncommon\nhappy; [fel. (felis) mem. (memoriae)/rec. (recordationis) =\u003E of happy memory];\nfel                  N      3 2 NOM S N\nfel                  N      3 2 VOC S N\nfel                  N      3 2 ACC S N\nfel, fellis  N (3rd) N   [XBXCC]\ngall, bile; poison; bitterness, venom; gall bladder;","chalcitis":"chalcit.is           N      1 7 LOC P F\nchalcit.is           N      1 7 DAT P F\nchalcit.is           N      1 7 ABL P F\nchalcites, chalcitae  N F   [XXXDS]    lesser\nchalcitis            N      3 1 NOM S F\nchalcitis            N      3 1 VOC S F\nchalcitis, chalcitidis  N (3rd) F   [XXXDO]    lesser\ncopper pyrites; precious stone (of copper color L\u002BS); copper stone/ore (L\u002BS);","bdellium":"bdelli.um            N      2 2 NOM S N\nbdelli.um            N      2 2 VOC S N\nbdelli.um            N      2 2 ACC S N\nbdelli.um            N      2 2 GEN P N                   uncommon\nbdellium, bdellii  N (2nd) N   [XAXEO]    uncommon\naromatic gum; tree (prob. of genus Balsamodendron);","resina":"resin.a              N      1 1 NOM S F\nresin.a              N      1 1 VOC S F\nresin.a              N      1 1 ABL S F\nresina, resinae  N (1st) F   [XAXCO]\nresin (solid/liquid); (product secreted by various trees);","terebenthina":"terebenthin.a        ADJ    1 1 NOM S F POS\nterebenthin.a        ADJ    1 1 VOC S F POS\nterebenthin.a        ADJ    1 1 ABL S F POS\nterebenthin.a        ADJ    1 1 NOM P N POS\nterebenthin.a        ADJ    1 1 VOC P N POS\nterebenthin.a        ADJ    1 1 ACC P N POS\nterebenthinus, terebenthina, terebenthinum  ADJ   [XAXDO]    lesser\nof the turpentine/terebinth (Pistacia ~) tree/wood; [(resina) ~ =\u003E terpentine];","pinea":"pine.a               ADJ    1 1 NOM S F POS\npine.a               ADJ    1 1 VOC S F POS\npine.a               ADJ    1 1 ABL S F POS\npine.a               ADJ    1 1 NOM P N POS\npine.a               ADJ    1 1 VOC P N POS\npine.a               ADJ    1 1 ACC P N POS\npineus, pinea, pineum  ADJ   [XXXDX]    lesser\nof the pine, covered in pines;","propolis":"propol.is            N      1 1 LOC P M\npropol.is            N      1 1 DAT P M\npropol.is            N      1 1 ABL P M\npropola, propolae  N (1st) M   [XXXEC]    uncommon\nretailer, huckster;","ficus":"fic.us               N      2 1 NOM S C\nficus, fici  N (2nd) C   [XAXBO]\nfic.us               N      4 1 NOM S M\nfic.us               N      4 1 VOC S M\nfic.us               N      4 1 GEN S M\nfic.us               N      4 1 NOM P M\nfic.us               N      4 1 VOC P M\nfic.us               N      4 1 ACC P M\nficus, ficus  N (4th) M   [XAXCO]\nfig; fig tree; hemorrhoids/piles (sg./pl.); [primus ficus =\u003E early autumn];","arida":"arid.a               N      1 1 NOM S F\narid.a               N      1 1 VOC S F\narid.a               N      1 1 ABL S F\narida, aridae  N (1st) F   [EXXEE]    Later  uncommon\narid.a               N      2 2 NOM P N\narid.a               N      2 2 VOC P N\narid.a               N      2 2 ACC P N\naridum, aridi  N (2nd) N   [XXXDO]    lesser\ndry land; dry place; dry surface; dryness;\narid.a               ADJ    1 1 NOM S F POS\narid.a               ADJ    1 1 VOC S F POS\narid.a               ADJ    1 1 ABL S F POS\narid.a               ADJ    1 1 NOM P N POS\narid.a               ADJ    1 1 VOC P N POS\narid.a               ADJ    1 1 ACC P N POS\naridus, arida -um, aridior -or -us, aridissimus -a -um  ADJ   [XXXAO]\ndry, arid, parched; water/rain-less; used dry, dried; thirsty; poor; shriveled;","decocta":"decoct.a             VPAR   3 1 NOM S F PERF PASSIVE PPL\ndecoct.a             VPAR   3 1 VOC S F PERF PASSIVE PPL\ndecoct.a             VPAR   3 1 ABL S F PERF PASSIVE PPL\ndecoct.a             VPAR   3 1 NOM P N PERF PASSIVE PPL\ndecoct.a             VPAR   3 1 VOC P N PERF PASSIVE PPL\ndecoct.a             VPAR   3 1 ACC P N PERF PASSIVE PPL\ndecoco, decocere, decoxi, decoctus  V (3rd)   [XXXBO]\nboil/melt (down/away); stew; (hot bath); heat to boiling; smelt, fuse; consume;\nruin; (cause to) waste away; shrivel; squander; suffer loss, become bankrupt;\ndecoct.a             N      1 1 NOM S F\ndecoct.a             N      1 1 VOC S F\ndecoct.a             N      1 1 ABL S F\ndecocta, decoctae  N (1st) F   [XXXEO]    uncommon\ndrink made by raising water to boiling then plunging into snow to cool;\ndecoct.a             N      2 2 NOM P N\ndecoct.a             N      2 2 VOC P N\ndecoct.a             N      2 2 ACC P N\ndecoctum, decocti  N (2nd) N   [XBXNO]    Pliny\ndecoction, potion made by boiling; (usu. medicine); medicinal drink (L\u002BS);\ndecoct.a             ADJ    1 1 NOM S F POS\ndecoct.a             ADJ    1 1 VOC S F POS\ndecoct.a             ADJ    1 1 ABL S F POS\ndecoct.a             ADJ    1 1 NOM P N POS\ndecoct.a             ADJ    1 1 VOC P N POS\ndecoct.a             ADJ    1 1 ACC P N POS\ndecoctus, decocta -um, decoctior -or -us, decoctissimus -a -um  ADJ   [XXXEO]    uncommon\nover-ripe (fruit); luscious (literary/rhetoric style); mature/ripe (good sense)\ndecoct.a             VPAR   3 1 NOM S F PERF PASSIVE PPL\ndecoct.a             VPAR   3 1 VOC S F PERF PASSIVE PPL\ndecoct.a             VPAR   3 1 ABL S F PERF PASSIVE PPL\ndecoct.a             VPAR   3 1 NOM P N PERF PASSIVE PPL\ndecoct.a             VPAR   3 1 VOC P N PERF PASSIVE PPL\ndecoct.a             VPAR   3 1 ACC P N PERF PASSIVE PPL\ndecoquo, decoquere, decoxi, decoctus  V (3rd)   [XXXBO]\nboil/melt (down/away); stew; (hot bath); heat to boiling; smelt, fuse; consume;\nruin; (cause to) waste away; shrivel; squander; suffer loss, become bankrupt;","stercus":"stercus              N      3 1 NOM S M\nstercus              N      3 1 VOC S M\nstercus, stercoris  N (3rd) M   [XXXDX]    lesser\nfilth, manure;","columbae":"columb.ae            N      1 1 GEN S F\ncolumb.ae            N      1 1 LOC S F\ncolumb.ae            N      1 1 DAT S F\ncolumb.ae            N      1 1 NOM P F\ncolumb.ae            N      1 1 VOC P F\ncolumba, columbae  N (1st) F   [XAXBO]\npigeon; dove; (term of endearment); (bird of Venus/symbol of love/gentleness);","pumex":"pumex                N      3 1 NOM S M\npumex                N      3 1 VOC S M\npumex, pumicis  N (3rd) M   [XXXCO]\npumice stone, similar volcanic rock; (esp. used to polish books/depilatory);","farina":"farin.a              N      1 1 NOM S F\nfarin.a              N      1 1 VOC S F\nfarin.a              N      1 1 ABL S F\nfarina, farinae  N (1st) F   [XXXDX]    lesser\nflour/meal (for dough/pastry); stuff persons made of; dust/powder (grinding);","lolii":"loli.i               N      2 4 GEN S N                   Late\nloli.i               N      2 4 LOC S N\nlolium, loli(i)  N (2nd) N   [XXXDX]    lesser\ndarnel/lolium; (grass found as weed in grain); (mistakenly) cockle, tares;","grossi":"gross.i              N      2 1 GEN S C\ngross.i              N      2 1 LOC S C\ngross.i              N      2 1 NOM P C\ngross.i              N      2 1 VOC P C\ngrossus, grossi  N (2nd) C   [XAXCO]\nyoung/green/immature/abortive fig;\ngross.i              ADJ    1 1 GEN S M POS\ngross.i              ADJ    1 1 GEN S N POS\ngross.i              ADJ    1 1 NOM P M POS\ngross.i              ADJ    1 1 VOC P M POS\ngrossus, grossa -um, grossior -or -us, grossissimus -a -um  ADJ   [EXXDB]    Later  lesser\ngreat/large, thick; coarse, gross;","in":"in                   PREP   ABL\nin  PREP  ABL   [XXXAX]\nin, on, at (space); in accordance with/regard to/the case of; within (time);\nin                   PREP   ACC\nin  PREP  ACC   [XXXAX]\ninto; about, in the mist of; according to, after (manner); for; to, among;","aqua":"aqu.a                N      1 1 NOM S F\naqu.a                N      1 1 VOC S F\naqu.a                N      1 1 ABL S F\naqua, aquae  N (1st) F   [XXXAO]\nwater; sea, lake; river, stream; rain, rainfall (pl.), rainwater; spa; urine;\n*","cocti":"coct.i               VPAR   3 1 GEN S M PERF PASSIVE PPL\ncoct.i               VPAR   3 1 GEN S N PERF PASSIVE PPL\ncoct.i               VPAR   3 1 NOM P M PERF PASSIVE PPL\ncoct.i               VPAR   3 1 VOC P M PERF PASSIVE PPL\ncoco, cocere, coxi, coctus  V (3rd) TRANS   [XXXAO]\ncook; boil, fry, bake; burn, parch (sun); stir up; ripen, mature (plot); digest\ncoct.i               N      2 2 GEN S N\ncoct.i               N      2 2 LOC S N\ncoctum, cocti  N (2nd) N   [XXXDO]    lesser\ncooked food; smelted ore;\ncoct.i               ADJ    1 1 GEN S M POS\ncoct.i               ADJ    1 1 GEN S N POS\ncoct.i               ADJ    1 1 NOM P M POS\ncoct.i               ADJ    1 1 VOC P M POS\ncoctus, cocta -um, coctior -or -us, coctissimus -a -um  ADJ   [XXXBO]\ncooked; roasted, burnt; smelted; baked (bricks); ripened, ripe; softened, mild;\ncoct.i               VPAR   3 1 GEN S M PERF PASSIVE PPL\ncoct.i               VPAR   3 1 GEN S N PERF PASSIVE PPL\ncoct.i               VPAR   3 1 NOM P M PERF PASSIVE PPL\ncoct.i               VPAR   3 1 VOC P M PERF PASSIVE PPL\ncoquo, coquere, coxi, coctus  V (3rd) TRANS   [XXXAO]\ncook; boil, fry, bake; burn, parch (sun); stir up; ripen, mature (plot); digest","elaterium":"elater.ium           N      3 2 GEN P N\nelater, elateris  N (3rd) N   [GXXEK]    NeoLatin  uncommon\nspring;\nelateri.um           N      2 2 NOM S N\nelateri.um           N      2 2 VOC S N\nelateri.um           N      2 2 ACC S N\nelateri.um           N      2 2 GEN P N                   uncommon\nelaterium, elaterii  N (2nd) N   [XAXFS]    veryrare\ncucumber juice; medicine from wild cucumber;","lauri":"laur.i               N      2 1 GEN S F\nlaur.i               N      2 1 LOC S F\nlaur.i               N      2 1 NOM P F\nlaur.i               N      2 1 VOC P F\nlaurus, lauri  N (2nd) F   [XXXBO]\nlaur.i               N      4 1 GEN S F                   Archaic\nlaurus, laurus  N (4th) F   [XXXBO]\nlaurel/bay tree/foliage/sprig/branch (medicine/magic); triumph/victory; honor;","bacae":"bac.ae               N      1 1 GEN S F\nbac.ae               N      1 1 LOC S F\nbac.ae               N      1 1 DAT S F\nbac.ae               N      1 1 NOM P F\nbac.ae               N      1 1 VOC P F\nbaca, bacae  N (1st) F   [XAXCO]\nberry, fruit of tree/shrub; olive; pearl; piece/bead of coral;","nitrum":"nitr.um              N      2 2 NOM S N\nnitr.um              N      2 2 VOC S N\nnitr.um              N      2 2 ACC S N\nnitr.um              N      2 2 GEN P N                   uncommon\nnitrum, nitri  N (2nd) N   [XXXCO]\nname of various alkalis (esp. soda and potash but probably not nitre);","sal":"sal                  N      3 1 NOM S M\nsal                  N      3 1 VOC S M\nsal, salis  N (3rd) M   [XXXBX]\nsalt; wit;\n*","Leuat":"leu.at               V      1 1 PRES ACTIVE  IND 3 S\nlevo, levare, levavi, levatus  V (1st) TRANS   [XXXAO]\nlift/raise/hold up; support; erect, set up; lift off, remove (load); comfort;\nundo, take off; release, rid; free from (worry/expense); refresh/restore;\nlighten, lessen, relieve; reduce in force/potency; bring down (cost/prices);\nalleviate (condition); make smooth, polish; free from hair, depilate;","id":"i.d                  PRON   4 1 NOM S N\ni.d                  PRON   4 1 ACC S N\nis, ea, id  PRON   [XXXAX]\nhe/she/it/they (by GENDER/NUMBER); DEMONST: that, he/she/it, they/them;\nid                   N      9 8 X   X M\nId., abb.  N M   [XXXDX]    lesser\nIdes (pl.), abb. Id.; 15th of month, March, May, July, Oct., 13th elsewhen;","quod":"qu.od                PRON   1 0 NOM S N\nqu.od                PRON   1 0 ACC S N\n[XXXAO]\nwho; that; which, what; of which kind/degree; person/thing/time/point that;\nwho/whatever, everyone who, all that, anything that;\nany; anyone/anything, any such; unspecified some; (after si/sin/sive/ne);\nwho?, which?, what?; what kind of?;\nquod                 ADV    POS\nquod  ADV   [XXXDX]    lesser\nwith respect to which;\nquod                 CONJ\nquod  CONJ   [XXXDX]    lesser\nbecause, as far as, insofar as; [quod si =\u003E but if];","exasperatum":"exasperat.um         VPAR   1 1 NOM S N PERF PASSIVE PPL\nexasperat.um         VPAR   1 1 VOC S N PERF PASSIVE PPL\nexasperat.um         VPAR   1 1 ACC S M PERF PASSIVE PPL\nexasperat.um         VPAR   1 1 ACC S N PERF PASSIVE PPL\nexaspero, exasperare, exasperavi, exasperatus  V (1st)   [XXXDX]    lesser\nexasperat.um         SUPINE 1 1 ACC S N\nroughen; irritate;","est":"es.t                 V      7 3 PRES ACTIVE  IND 3 S      Early\nedo, esse, -, -  V TRANS   [XXXCO]\neat/consume/devour; eat away (fire/water/disease); destroy; spend money on food\n.est                 V      5 1 PRES ACTIVE  IND 3 S\nsum, esse, fui, futurus  V   [XXXAX]\nbe; exist; (also used to form verb perfect passive tenses) with NOM PERF PPL","spodium":"spodi.um             N      2 2 NOM S N\nspodi.um             N      2 2 VOC S N\nspodi.um             N      2 2 ACC S N\nspodi.um             N      2 2 GEN P N                   uncommon\nspodium, spodii  N (2nd) N   [XXXFS]    veryrare\nmetal slag; vegetable ash (Pliny);","cummi":"cummi                N      9 9 X   X N\ncummi, undeclined  N N   [XAXCO]\ncumm.i               N      3 3 LOC S F                   Early\ncumm.i               N      3 3 DAT S F\ncumm.i               N      3 3 ABL S F\ncummis, cummis  N (3rd) F   [XAXCO]\ngum, vicid secretion from trees;","oui":"ou.i                 N      2 2 GEN S N\nou.i                 N      2 2 LOC S N\novum, ovi  N (2nd) N   [XXXBX]\negg; oval;\nou.i                 N      3 3 LOC S F                   Early\nou.i                 N      3 3 DAT S F\nou.i                 N      3 3 ABL S F\novis, ovis  N (3rd) F   [XAXAX]\nsheep;","album":"alb.um               N      1 1 GEN P F                   uncommon\nalba, albae  N (1st) F   [DXXFS]    Late  veryrare\nwhite precious stone; pearl;\nalb.um               N      2 2 NOM S N\nalb.um               N      2 2 VOC S N\nalb.um               N      2 2 ACC S N\nalb.um               N      2 2 GEN P N                   uncommon\nalbum, albi  N (2nd) N   [XXXBO]\nwhite (color); white (eye/egg); white tablet, official list, register;\nprojection-screen;\nalb.um               ADJ    1 1 NOM S N POS\nalb.um               ADJ    1 1 VOC S N POS\nalb.um               ADJ    1 1 ACC S M POS\nalb.um               ADJ    1 1 ACC S N POS\nalbus, alba -um, albior -or -us, albissimus -a -um  ADJ   [XXXAO]\nwhite, pale, fair, hoary, gray; bright, clear; favorable, auspicious, fortunate\nalb.um               N      3 3 GEN P M\nAlbis, Albis  N (3rd) M   [XXGEO]    uncommon\nElbe; (river in Germany);","lac":"lac                  N      3 2 NOM S N\nlac                  N      3 2 VOC S N\nlac                  N      3 2 ACC S N\nlac, lactis  N (3rd) N   [XXXBX]\nmilk; milky juice of plants; spat/spawn (of oyster);","tragacanthum":"Two words\nMay be 2 words combined (traga\u002Bcanthum) If not obvious, probably incorrect\ncanth.um             N      2 1 ACC S M\ncanth.um             N      2 1 GEN P M                   uncommon\ncanthus, canthi  N (2nd) M   [XXXEO]    uncommon\ntire, iron ring around a carriage wheel; wheel;\ntrag.a               N      2 2 NOM P N\ntrag.a               N      2 2 VOC P N\ntrag.a               N      2 2 ACC P N\ntragum, tragi  N (2nd) N   [XXXFS]    veryrare\nporridge;\n*","Carnem":"carn.em              N      3 3 ACC S F\ncarnis, carnis  N (3rd) F   [XXXCO]\nmeat/flesh; the_body; pulp/flesh of plants, sapwood; soft part; low passions;\ncarn.em              N      3 1 ACC S F\ncaro, carnis  N (3rd) F   [XXXBO]\nmeat, flesh; the_body; pulpy/fleshy/soft parts (plant), sapwood; low passions;","alit":"al.it                V      3 1 PRES ACTIVE  IND 3 S\nalo, alere, alui, alitus  V (3rd) TRANS   [XXXAO]\nalo, alere, alui, altus  V (3rd) TRANS   [XXXAO]\nfeed, nourish, rear, nurse, suckle; cherish; support, maintain, develop;","ulcus":"ulcus                N      3 2 NOM S N\nulcus                N      3 2 VOC S N\nulcus                N      3 2 ACC S N\nulcus, ulceris  N (3rd) N   [XXXDX]    lesser\nulcer, sore;","implet":"impl.et              V      2 1 PRES ACTIVE  IND 3 S\nimpleo, implere, implevi, impletus  V (2nd)   [XXXAX]\nfill up; satisfy, fulfill; fill, finish, complete; spend (time);","Attice":"attic.e              ADJ    1 1 VOC S M POS\nAtticus, Attica, Atticum  ADJ   [XXXCO]\nAttic, Athenian; classic, elegant;\nattice               ADV    POS\nAttice  ADV   [XXHCO]\nAttic, in Attic/Athenian manner; elegantly;","uel":"uel                  ADV    POS\nvel  ADV   [XXXBX]\neven, actually; or even, in deed; or;\nuel                  CONJ\nvel  CONJ   [XXXAX]\nor; [vel ... vel =\u003E either ... or];","cera":"cer.a                N      1 1 NOM S F\ncer.a                N      1 1 VOC S F\ncer.a                N      1 1 ABL S F\ncera, cerae  N (1st) F   [XXXBO]\nwax, beeswax; honeycomb; wax-covered writing tablet, letter; wax image/seal;\ncer.a                V      1 1 PRES ACTIVE  IMP 2 S\ncero, cerare, ceravi, ceratus  V (1st) TRANS   [XXXFO]    veryrare\nsmear/coat with wax;","buturum":"butur.um             N      2 2 NOM S N\nbutur.um             N      2 2 VOC S N\nbutur.um             N      2 2 ACC S N\nbutur.um             N      2 2 GEN P N                   uncommon\nbuturum, buturi  N (2nd) N   [XAXDO]    lesser\nbutter;","Molliunt":"molli.unt            V      4 1 PRES ACTIVE  IND 3 P\nmollio, mollire, mollivi, mollitus  V (4th)   [XXXDX]    lesser\nsoften, mitigate, make easier; civilize, tame, enfeeble;","aes":"aes                  N      3 2 NOM S N\naes                  N      3 2 VOC S N\naes                  N      3 2 ACC S N\naes, aeris  N (3rd) N   [XXXAO]\nmoney, pay, fee, fare; copper/bronze/brass, base metal; (w/alienum) debt; gong;","combustum":"combust.um           VPAR   3 1 NOM S N PERF PASSIVE PPL\ncombust.um           VPAR   3 1 VOC S N PERF PASSIVE PPL\ncombust.um           VPAR   3 1 ACC S M PERF PASSIVE PPL\ncombust.um           VPAR   3 1 ACC S N PERF PASSIVE PPL\ncomburo, comburere, combusi, combustus  V (3rd) TRANS   [DXXBW]    Late\ncombust.um           SUPINE 3 1 ACC S N\ncombust.um           VPAR   3 1 NOM S N PERF PASSIVE PPL\ncombust.um           VPAR   3 1 VOC S N PERF PASSIVE PPL\ncombust.um           VPAR   3 1 ACC S M PERF PASSIVE PPL\ncombust.um           VPAR   3 1 ACC S N PERF PASSIVE PPL\ncomburo, comburere, combussi, combustus  V (3rd) TRANS   [XXXBO]\ncombust.um           SUPINE 3 1 ACC S N\nburn up/away; (w/love); consume/destroy w/fire; reduce to ash, cremate; scald;\ncombust.um           N      2 2 NOM S N\ncombust.um           N      2 2 VOC S N\ncombust.um           N      2 2 ACC S N\ncombust.um           N      2 2 GEN P N                   uncommon\ncombustum, combusti  N (2nd) N   [XBXEO]    uncommon\nburn, injury from burning/scalding;","terra":"terr.a               N      1 1 NOM S F\nterr.a               N      1 1 VOC S F\nterr.a               N      1 1 ABL S F\nterra, terrae  N (1st) F   [XXXAX]\nearth, land, ground; country, region;","papaueris":"papauer.is           N      3 2 GEN S N\npapaver, papaveris  N (3rd) N   [XXXDX]    lesser\npoppy; poppy-seed;","lacrima":"lacrim.a             N      1 1 NOM S F\nlacrim.a             N      1 1 VOC S F\nlacrim.a             N      1 1 ABL S F\nlacrima, lacrimae  N (1st) F   [XXXBO]\ntear; exuded gum/sap; bit of lead; quicksilver from ore; weeping (pl.); dirge;\nlacrim.a             V      1 1 PRES ACTIVE  IMP 2 S\nlacrimo, lacrimare, lacrimavi, lacrimatus  V (1st)   [XXXDX]    lesser\nshed tears, weep;\n*","sebum":"seb.um               N      2 2 NOM S N\nseb.um               N      2 2 VOC S N\nseb.um               N      2 2 ACC S N\nseb.um               N      2 2 GEN P N                   uncommon\nsebum, sebi  N (2nd) N   [XXXDX]    lesser\nsuet, tallow, hard animal fat;","adeps":"adeps                N      3 1 NOM S C\nadeps                N      3 1 VOC S C\nadeps, adipis  N (3rd) C   [XXXCO]\nfat, lard, grease; fatty tissue; bombast; corpulence, obesity (pl.); sapwood;","oleum":"ole.um               N      1 1 GEN P F                   uncommon\nolea, oleae  N (1st) F   [XXXDX]    lesser\nolive; olive-tree;\nole.um               N      2 2 NOM S N\nole.um               N      2 2 VOC S N\nole.um               N      2 2 ACC S N\nole.um               N      2 2 GEN P N                   uncommon\noleum, olei  N (2nd) N   [XXXAX]\noil;","sesamum":"ses                  PREFIX\nsix-;\nam.um                N      1 1 GEN P F                   uncommon\nama, amae  N (1st) F   [XXXDO]    lesser\nbucket; water bucket; (esp. fireman\u0027s bucket);","sertula":"sertul.a             N      1 1 NOM S F\nsertul.a             N      1 1 VOC S F\nsertul.a             N      1 1 ABL S F\nsertula, sertulae  N (1st) F   [XAXNS]    Pliny\nclover (species of, Melilotus or Trifolium); melilotus; serta Campanica;","Campana":"campan.a             N      1 1 NOM S F\ncampan.a             N      1 1 VOC S F\ncampan.a             N      1 1 ABL S F\ncampana, campanae  N (1st) F   [FXXCE]    Medieval\nbell;\ncampan.a             ADJ    1 1 NOM S F POS\ncampan.a             ADJ    1 1 VOC S F POS\ncampan.a             ADJ    1 1 ABL S F POS\ncampan.a             ADJ    1 1 NOM P N POS\ncampan.a             ADJ    1 1 VOC P N POS\ncampan.a             ADJ    1 1 ACC P N POS\ncampanus, campana, campanum  ADJ   [FXXFM]    Medieval  veryrare\nflat; level;","narcissi":"narciss.i            N      2 1 GEN S M\nnarciss.i            N      2 1 LOC S M\nnarciss.i            N      2 1 NOM P M\nnarciss.i            N      2 1 VOC P M\nnarcissus, narcissi  N (2nd) M   [XAXEO]    uncommon\nnarcissus (flower); son of Cephisus and Liriope; rich freedman of Claudius;","radix":"radix                N      3 1 NOM S F\nradix                N      3 1 VOC S F\nradix, radicis  N (3rd) F   [XXXBX]\nroot; base; square-root (math);","rosae":"ros.ae               VPAR   3 1 GEN S F PERF PASSIVE PPL\nros.ae               VPAR   3 1 DAT S F PERF PASSIVE PPL\nros.ae               VPAR   3 1 NOM P F PERF PASSIVE PPL\nros.ae               VPAR   3 1 VOC P F PERF PASSIVE PPL\nrodo, rodere, rosi, rosus  V (3rd)   [XXXDX]    lesser\ngnaw, peck;\nros.ae               N      1 1 GEN S F\nros.ae               N      1 1 LOC S F\nros.ae               N      1 1 DAT S F\nros.ae               N      1 1 NOM P F\nros.ae               N      1 1 VOC P F\nrosa, rosae  N (1st) F   [XXXBO]\nrose; (also as term of endearment); rose bush; rose oil;","folia":"foli.a               N      2 4 NOM P N\nfoli.a               N      2 4 VOC P N\nfoli.a               N      2 4 ACC P N\nfolium, foli(i)  N (2nd) N   [XAXBX]\nleaf;","coagulum":"coagul.um            N      2 2 NOM S N\ncoagul.um            N      2 2 VOC S N\ncoagul.um            N      2 2 ACC S N\ncoagul.um            N      2 2 GEN P N                   uncommon\ncoagulum, coaguli  N (2nd) N   [XAXCO]\ntie/bond, binding agent; rennet; curds; thickening/congealing; plant (~ terrae)","uitellus":"uitell.us            N      2 1 NOM S M\nvitellus, vitelli  N (2nd) M   [XXXFO]    veryrare\nlittle calf; (term of endearment);\nyolk, yolk of egg;","crudus":"crud.us              ADJ    1 1 NOM S M POS\ncrudus, cruda -um, crudior -or -us, crudissimus -a -um  ADJ   [XXXAO]\nraw; bloody/bleeding; crude, cruel, rough, merciless; fierce/savage; grievous;\nyouthful/hardy/vigorous; fresh/green/immature; undigested; w/undigested food;","amarae":"amar.ae              ADJ    1 1 GEN S F POS\namar.ae              ADJ    1 1 DAT S F POS\namar.ae              ADJ    1 1 NOM P F POS\namar.ae              ADJ    1 1 VOC P F POS\namarus, amara -um, amarior -or -us, amarissimus -a -um  ADJ   [XXXBO]\nbitter, brackish, pungent; harsh, shrill; sad, calamitous; ill-natured, caustic","nuces":"nuc.es               N      3 1 NOM P F\nnuc.es               N      3 1 VOC P F\nnuc.es               N      3 1 ACC P F\nnux, nucis  N (3rd) F   [XXXDX]    lesser\nnut;","medullae":"medull.ae            N      1 1 GEN S F\nmedull.ae            N      1 1 LOC S F\nmedull.ae            N      1 1 DAT S F\nmedull.ae            N      1 1 NOM P F\nmedull.ae            N      1 1 VOC P F\nmedulla, medullae  N (1st) F   [XXXBX]\nmarrow, kernel; innermost part; quintessence;","omnes":"omn.es               ADJ    3 2 NOM P C POS\nomn.es               ADJ    3 2 VOC P C POS\nomn.es               ADJ    3 2 ACC P C POS\nomnis, omnis, omne  ADJ   [XXXAC]\neach, every, every one (of a number); all (pl.); all/the whole of;\nomn.es               N      3 3 NOM P C\nomn.es               N      3 3 VOC P C\nomn.es               N      3 3 ACC P C\nomnis, omnis  N (3rd) C   [XXXBC]\nall men (pl.), all persons;","bi":"b.i                  N      4 1 GEN S C                   Archaic\nbus, bus  N (4th) C   [BAXDO]    Early  lesser\nox, bull; cow; cattle (pl.); (odd form mostly in Varro);","pix":"pix                  N      3 1 NOM S F\npix                  N      3 1 VOC S F\npix, picis  N (3rd) F   [XXXDX]    lesser\npitch, tar;","coclea":"cocle.a              N      1 1 NOM S F\ncocle.a              N      1 1 VOC S F\ncocle.a              N      1 1 ABL S F\ncoclea, cocleae  N (1st) F   [XXXBO]\nsnail; (form of) a snail shell; spiral; screw (press/water); winding entrance;","cocta":"coct.a               VPAR   3 1 NOM S F PERF PASSIVE PPL\ncoct.a               VPAR   3 1 VOC S F PERF PASSIVE PPL\ncoct.a               VPAR   3 1 ABL S F PERF PASSIVE PPL\ncoct.a               VPAR   3 1 NOM P N PERF PASSIVE PPL\ncoct.a               VPAR   3 1 VOC P N PERF PASSIVE PPL\ncoct.a               VPAR   3 1 ACC P N PERF PASSIVE PPL\ncoco, cocere, coxi, coctus  V (3rd) TRANS   [XXXAO]\ncook; boil, fry, bake; burn, parch (sun); stir up; ripen, mature (plot); digest\ncoct.a               N      1 1 NOM S F\ncoct.a               N      1 1 VOC S F\ncoct.a               N      1 1 ABL S F\ncocta, coctae  N (1st) F   [XXXFO]    veryrare\nboiled water; (water boiled then iced);\ncoct.a               N      2 2 NOM P N\ncoct.a               N      2 2 VOC P N\ncoct.a               N      2 2 ACC P N\ncoctum, cocti  N (2nd) N   [XXXDO]    lesser\ncooked food; smelted ore;\ncoct.a               ADJ    1 1 NOM S F POS\ncoct.a               ADJ    1 1 VOC S F POS\ncoct.a               ADJ    1 1 ABL S F POS\ncoct.a               ADJ    1 1 NOM P N POS\ncoct.a               ADJ    1 1 VOC P N POS\ncoct.a               ADJ    1 1 ACC P N POS\ncoctus, cocta -um, coctior -or -us, coctissimus -a -um  ADJ   [XXXBO]\ncooked; roasted, burnt; smelted; baked (bricks); ripened, ripe; softened, mild;\ncoct.a               VPAR   3 1 NOM S F PERF PASSIVE PPL\ncoct.a               VPAR   3 1 VOC S F PERF PASSIVE PPL\ncoct.a               VPAR   3 1 ABL S F PERF PASSIVE PPL\ncoct.a               VPAR   3 1 NOM P N PERF PASSIVE PPL\ncoct.a               VPAR   3 1 VOC P N PERF PASSIVE PPL\ncoct.a               VPAR   3 1 ACC P N PERF PASSIVE PPL\ncoquo, coquere, coxi, coctus  V (3rd) TRANS   [XXXAO]\ncook; boil, fry, bake; burn, parch (sun); stir up; ripen, mature (plot); digest","cicutae":"cicut.ae             N      1 1 GEN S F\ncicut.ae             N      1 1 LOC S F\ncicut.ae             N      1 1 DAT S F\ncicut.ae             N      1 1 NOM P F\ncicut.ae             N      1 1 VOC P F\ncicuta, cicutae  N (1st) F   [XAXCO]\nhemlock (Conium maculatum); hemlock juice (poison); shepherd\u0027s pipe (hemlock);","plumbi":"plumb.i              N      2 2 GEN S N\nplumb.i              N      2 2 LOC S N\nplumbum, plumbi  N (2nd) N   [XXXDX]    lesser\nlead; [plumbum album =\u003E tin];","recrementum":"re                   PREFIX\n- back, - again;\ncrement.um           N      2 2 NOM S N\ncrement.um           N      2 2 VOC S N\ncrement.um           N      2 2 ACC S N\ncrement.um           N      2 2 GEN P N                   uncommon\ncrementum, crementi  N (2nd) N   [XXXEO]    uncommon\nincrease, growth;","Graeci":"graec.i              N      2 1 GEN S M\ngraec.i              N      2 1 LOC S M\ngraec.i              N      2 1 NOM P M\ngraec.i              N      2 1 VOC P M\nGraecus, Graeci  N (2nd) M   [XXHAX]\nGreek; the Greeks (pl.);\ngraec.i              ADJ    1 1 GEN S M POS\ngraec.i              ADJ    1 1 GEN S N POS\ngraec.i              ADJ    1 1 NOM P M POS\ngraec.i              ADJ    1 1 VOC P M POS\ngraecus, graeca, graecum  ADJ   [XXXDX]    lesser\nGreek;","uocant":"uoc.ant              V      1 1 PRES ACTIVE  IND 3 P\nvoco, vocare, vocavi, vocatus  V (1st)   [XXXAX]\ncall, summon; name; call upon;","panaces":"panaces              N      3 2 NOM S N\npanaces              N      3 2 VOC S N\npanaces              N      3 2 ACC S N\npanaces, panacis  N (3rd) N   [XAXCO]\npanaces              N      3 3 NOM S M\npanaces              N      3 3 VOC S M\npanac.es             N      3 3 NOM P M\npanac.es             N      3 3 VOC P M\npanac.es             N      3 3 ACC P M\npanaces, panacis  N (3rd) M   [XAXCO]\npanac.es             N      3 1 NOM P C\npanac.es             N      3 1 VOC P C\npanac.es             N      3 1 ACC P C\npanax, panacis  N (3rd) C   [XAXCO]\nplant, supposed to cure all diseases; panacea, heal-all; (species of Opoponax);","cardamomum":"cardamom.um          N      2 2 NOM S N\ncardamom.um          N      2 2 VOC S N\ncardamom.um          N      2 2 ACC S N\ncardamom.um          N      2 2 GEN P N                   uncommon\ncardamomum, cardamomi  N (2nd) N   [XAXDO]    lesser\ncardamom (Elettaris cardamomum); its seeds (used in medicine/spice);","galbanum":"galban.um            N      2 2 NOM S N\ngalban.um            N      2 2 VOC S N\ngalban.um            N      2 2 ACC S N\ngalban.um            N      2 2 GEN P N                   uncommon\ngalbanum, galbani  N (2nd) N   [XAQES]    uncommon\ngum resin of umbelliferous plant in Persia/Syria (species of Ferula), galbanum;\ngalban.um            ADJ    1 1 NOM S N POS\ngalban.um            ADJ    1 1 VOC S N POS\ngalban.um            ADJ    1 1 ACC S M POS\ngalban.um            ADJ    1 1 ACC S N POS\ngalbanus, galbana, galbanum  ADJ   [XAXEO]    uncommon\ngalbaneous, characteristic of galbanum/gum resin from species of Ferula;","uua":"uu.a                 N      1 1 NOM S F\nuu.a                 N      1 1 VOC S F\nuu.a                 N      1 1 ABL S F\nuva, uvae  N (1st) F   [XXXBX]\ngrape;","t":"t                    N      9 8 X   X M\nT., abb.  N M   [XXXDX]    lesser\nTitus, Roman praenomen; (abb. T.);","aminia":"am                   PREFIX\naround, round about; having two;\ni                    SUFFIX\nart or craft done by the person (abstract noun of person); office of, -ship;\nini.a                N      1 1 NOM S F\nini.a                N      1 1 VOC S F\nini.a                N      1 1 ABL S F\nina, inae  N (1st) F   [XXXEO]    uncommon\nfiber; sinew, tendon; strip; papyrus/paper fiber;\nam                   PREFIX\naround, round about; having two;\ni                    SUFFIX\nmakes abstract noun of the verb; place/instrument/result of verb action;\nini.a                N      2 2 NOM P N\nini.a                N      2 2 VOC P N\nini.a                N      2 2 ACC P N\ninsum, inesse, infui, infuturus  V   [XXXBX]\nbe in/on/there; belong to; be involved in;","styrax":"styrax               N      3 1 NOM S M\nstyrax               N      3 1 VOC S M\nstyrax, styracis  N (3rd) M   [XAXEO]    uncommon\nstyrax/storax; (fragrant gum/tree Styrax officinalis); (used medically);","iris":"i.ris                V      6 1 PRES PASSIVE IND 2 S\neo, ire, ivi(ii), itus  V   [XXXAX]\ngo, walk; march, advance; pass; flow; pass (time); ride; sail;\nir.is                N      1 1 LOC P F\nir.is                N      1 1 DAT P F\nir.is                N      1 1 ABL P F\nira, irae  N (1st) F   [XXXBO]\nanger; ire, wrath; resentment; indignation; rage/fury/violence; bad blood;\niris                 N      3 3 NOM S M\niris                 N      3 3 VOC S M\nir.is                N      3 3 GEN S M\nir.is                N      3 3 NOM P M                   Early     uncommon\nir.is                N      3 3 ACC P M                   Early\niris, iris  N (3rd) M   [XAXFO]    veryrare\nhedgehog;\niris                 N      3 3 NOM S F\niris                 N      3 3 VOC S F\nir.is                N      3 3 GEN S F\nir.is                N      3 3 NOM P F                   Early     uncommon\nir.is                N      3 3 ACC P F                   Early\nIris, Iris  N (3rd) F   [XYXCO]\nIris (messenger of the gods, goddess of the rainbow); rainbow;\niris, iris  N (3rd) F   [XAXCO]\niris (plant)i; preparation of iris root; iridescent stone;\niris                 N      3 1 NOM S F\niris                 N      3 1 VOC S F\nIris, Iridis  N (3rd) F   [XYXCO]\nIris (messenger of the gods, goddess of the rainbow); rainbow;\niris, iridis  N (3rd) F   [XAXCO]\niris (plant)i; preparation of iris root; iridescent stone;","balsamum":"balsam.um            N      2 2 NOM S N\nbalsam.um            N      2 2 VOC S N\nbalsam.um            N      2 2 ACC S N\nbalsam.um            N      2 2 GEN P N                   uncommon\nbalsamum, balsami  N (2nd) N   [XAXCO]\nbalsam; balsam tree/gum (aromatic resin used as unguent/salve); balsam; balm;","sordes":"sord.es              V      2 1 PRES ACTIVE  IND 2 S\nsordeo, sordere, sordui, sorditus  V (2nd)   [XXXBO]\nbe dirty/soiled; seem mean/unworthy/not good enough/common/coarse/vile/ignoble;\nsordes               N      3 3 NOM S F\nsordes               N      3 3 VOC S F\nsord.es              N      3 3 NOM P F\nsord.es              N      3 3 VOC P F\nsord.es              N      3 3 ACC P F\nsordes, sordis  N (3rd) F   [XXXDX]    lesser\nfilth, dirt, uncleanness, squalor; meanness, stinginess; humiliation, baseness;","ex":"ex                   PREP   ABL\nex  PREP  ABL   [XXXAX]\nout of, from; by reason of; according to; because of, as a result of;","gymnasio":"gymnasi.o            N      2 2 DAT S N\ngymnasi.o            N      2 2 ABL S N\ngymnasium, gymnasii  N (2nd) N   [GXXEK]    NeoLatin  uncommon\nsecondary school;\ngymnasi.o            N      2 4 DAT S N\ngymnasi.o            N      2 4 ABL S N\ngymnasium, gymnasi(i)  N (2nd) N   [XXXDX]    lesser\nsports center;","sulpur":"sulpur               N      3 2 NOM S N\nsulpur               N      3 2 VOC S N\nsulpur               N      3 2 ACC S N\nsulpur, sulpuris  N (3rd) N   [XXXCO]\nbrimstone, sulfur; lightning/thunder (associated with brimstone);","ruta":"rut.a                VPAR   3 1 NOM S F PERF PASSIVE PPL\nrut.a                VPAR   3 1 VOC S F PERF PASSIVE PPL\nrut.a                VPAR   3 1 ABL S F PERF PASSIVE PPL\nrut.a                VPAR   3 1 NOM P N PERF PASSIVE PPL\nrut.a                VPAR   3 1 VOC P N PERF PASSIVE PPL\nrut.a                VPAR   3 1 ACC P N PERF PASSIVE PPL\nruo, ruere, rui, rutus  V (3rd)   [XXXAX]\ndestroy, ruin, overthrow; rush on, run; fall; charge (in \u002B ACC); be ruined;\nrut.a                N      1 1 NOM S F\nrut.a                N      1 1 VOC S F\nrut.a                N      1 1 ABL S F\nruta, rutae  N (1st) F   [XXXDX]    lesser\nrue, a bitter herb;\nrut.a                ADJ    1 1 NOM S F POS\nrut.a                ADJ    1 1 VOC S F POS\nrut.a                ADJ    1 1 ABL S F POS\nrut.a                ADJ    1 1 NOM P N POS\nrut.a                ADJ    1 1 VOC P N POS\nrut.a                ADJ    1 1 ACC P N POS\nrutus, ruta, rutum  ADJ   [ELXDS]    Later  lesser\ndug-up; (ruta et caesa = everything dug up and cut down on an estate);"};
+        </script>
+
+        <script>
+            function dict(word) {
+                var lines = dictionary[word].split('\n');
+                var buffer = [];
+                var semiColon = false;
+
+                for(let line of lines) {
+                    line = line.trim();
+                    if (line.includes(';')) {
+                        semiColon = true;
+                    } else {
+                        if (semiColon) {
+                            buffer.push('');
+                        }
+
+                        semiColon = false;
+                    }
+
+                    buffer.push(line);
+                }
+
+                document.getElementById('dictcontent').innerHTML = buffer.join('\n');
+                document.getElementById('dictword').innerHTML = word;
+                document.getElementById('dictwindow').style.display = 'block';
+            }
+
+            function close_dict() {
+                document.getElementById('dictwindow').style.display = 'none';
+            }
+
+            function open_github() {
+                window.open('https://bolner.github.io/rainbow-latin-reader', '_blank').focus();
+            }
+
+            function topbar_click() {
+                var element = document.getElementById('maintable');
+                element.classList.toggle('colored');
+            }
+        </script>
+    </body>
+</html>
